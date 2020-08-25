@@ -1,0 +1,25 @@
+const vector<string> keyboard = {"", "", "abc", "def", "ghi",
+                                 "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+void dfs(string &digits, vector<string> &res, string &tmp, int start) {
+    int n = digits.size();
+    if (tmp.size() == n) {
+        res.push_back(tmp);
+        return;
+    }
+    auto strs = keyboard[digits[start] - '0'];
+    for (int j = 0; j < strs.size(); j++) {
+        tmp.push_back(strs[j]);
+        dfs(digits, res, tmp, start + 1);
+        tmp.pop_back();
+    }
+}
+
+vector<string> letterCombinations(string digits) {
+    if(digits.empty()) return {};
+    vector<string> res;
+    string tmp = "";
+    int start = 0;
+    dfs(digits, res, tmp, start);
+    return res;
+}
