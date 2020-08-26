@@ -1,6 +1,11 @@
-set<vector<int>> s;
+#include<vector>
+#include<set>
 
-void dfs(vector<vector<int>> &res, vector<int> &tmp, vector<int> &nums, int start) {
+using namespace std;
+
+set<vector<int> > s;
+
+void dfs(vector<vector<int> > &res, vector<int> &tmp, vector<int> &nums, int start) {
     if (tmp.size() > 1 && s.find(tmp) == s.end()) {
         s.insert(tmp);
         res.push_back(tmp);
@@ -14,8 +19,8 @@ void dfs(vector<vector<int>> &res, vector<int> &tmp, vector<int> &nums, int star
     }
 }
 
-vector<vector<int>> findSubsequences(vector<int> &nums) {
-    vector<vector<int>> res;
+vector<vector<int> > findSubsequences(vector<int> &nums) {
+    vector<vector<int> > res;
     vector<int> tmp;
     int start = 0;
     dfs(res, tmp, nums, start);
