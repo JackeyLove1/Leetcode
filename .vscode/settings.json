@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "vector": "cpp"
+        "vector": "cpp",
+        "queue": "cpp"
     },
     "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python"
 }
