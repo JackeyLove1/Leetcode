@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "vector": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "iosfwd": "cpp"
     },
     "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python"
 }
