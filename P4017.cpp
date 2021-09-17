@@ -13,7 +13,7 @@
 
 using namespace std;
 
-constexpr int MOD = 80112002, N = 1e4 + 100;
+constexpr int MOD = 80112002, N = 1e6 + 100;
 int n, m;
 
 int h[N], e[N], ne[N], idx;
