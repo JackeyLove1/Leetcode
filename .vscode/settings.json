@@ -73,7 +73,8 @@
         "unordered_map": "cpp",
         "unordered_set": "cpp",
         "utility": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "*.tcc": "cpp"
     },
     "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python"
 }
