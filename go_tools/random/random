@@ -1,0 +1,49 @@
+package utils
+
+import (
+	"math/rand"
+	"time"
+)
+
+// create random numbers
+type Random struct {
+	rand *rand.Rand
+}
+
+// a simple random number generator
+func NewRandom() *Random {
+	var r Random
+	source := rand.NewSource(time.Now().UnixNano())
+	r.rand = rand.New(source)
+	// r.rand.Seed()
+	return &r
+}
+
+
+func NewRandomWithSeed(seed int64) *Random {
+	var r Random
+	r.rand.Seed(seed)
+	return &r
+}
+
+// generator a random number
+func (r *Random) Next() uint32 {
+	return r.rand.Uint32()
+}
+
+// returns a uniformly distribution value in the range [0 .. n-1]
+func (r *Random) Uniform(n int) uint32 {
+	u := uint32(n)
+	return r.Next() % u
+}
+
+//
+func (r *Random) OneIn(n int) bool {
+	u := uint32(n)
+	return r.Next()%u == 0
+}
+
+//
+func (r *Random) Skewed(n int) uint32 {
+	return r.Uniform(1 << r.Uniform(n+1))
+}
