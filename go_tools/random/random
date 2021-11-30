@@ -22,7 +22,8 @@ func NewRandom() *Random {
 
 func NewRandomWithSeed(seed int64) *Random {
 	var r Random
-	r.rand.Seed(seed)
+	source := rand.NewSource(seed)
+	r.rand = rand.New(source)
 	return &r
 }
 

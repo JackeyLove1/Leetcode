@@ -7,6 +7,7 @@
 #include <cassert>
 
 struct LRUHandle;
+constexpr int DEBUG = 1;
 
 class Cache {
 public:
@@ -18,7 +19,7 @@ public:
 
     virtual ~Cache() {};
 
-    virtual LRUHandle *Insert(const std::string &key, const std::string &value) = 0;
+    virtual LRUHandle *Insert(std::string key, std::string value) = 0;
 
     virtual LRUHandle *Lookup(const std::string &key) = 0;
 
@@ -37,7 +38,7 @@ struct LRUHandle {
 
     size_t charge;
 
-    explicit LRUHandle() : prev(nullptr), next(nullptr) {}
+    explicit LRUHandle() : key(""), value(""), prev(nullptr), next(nullptr) {}
 
     explicit LRUHandle(std::string key_, std::string value_)
             : key(std::move(key_)), value(std::move(value_)),
@@ -45,8 +46,9 @@ struct LRUHandle {
               charge(key.size() + value.size()) {}
 
     ~LRUHandle() {
-        // delete prev; // ?
-        // delete next; // ?
+        if (DEBUG) {
+            std::cout << " ~LRUHandle() " << key << " : " << value << std::endl;
+        }
     }
 };
 
@@ -92,7 +94,7 @@ public:
 
     void SetCapacity(size_t capacity) { capacity_ = capacity; }
 
-    LRUHandle *Insert(const std::string &key, const std::string &value);
+    LRUHandle *Insert(std::string key, std::string value);
 
     LRUHandle *Lookup(const std::string &key);
 
@@ -117,8 +119,15 @@ LRUCache::LRUCache() : capacity_(0), memory_usage_(0), size_(0) {
 }
 
 LRUCache::~LRUCache() {
+    if (DEBUG) {
+        std::cout << "~LRUCache() " << std::endl;
+    }
     LRUHandle *p;
-    if (head_ == tail_) return;
+    if (head_ == tail_) {
+        delete head_;
+        delete tail_;
+        return;
+    }
     while (head_ != tail_) {
         p = head_->next;
         delete head_;
@@ -173,19 +182,21 @@ LRUHandle *LRUCache::Lookup(const std::string &key) {
     if (!cache_.count(key)) {
         return nullptr;
     }
+    LRUHandle *node = cache_[key];
+    LRU_MoveToHead(node);
     return cache_[key];
 }
 
-LRUHandle *LRUCache::Insert(const std::string &key, const std::string &value) {
+LRUHandle *LRUCache::Insert(std::string key, std::string value) {
     std::unique_lock lk(rw_mutex_);
     if (!cache_.count(key)) {
         LRUHandle *node = new LRUHandle(key, value);
+        cache_[key] = node;
         LRU_Append(node);
         if (++size_ > capacity_) {
             LRUHandle *p = LRU_RemoveTail();
             cache_.erase(p->key);
             delete p;
-            p = nullptr;
             --size_;
         }
         return node;
@@ -205,7 +216,6 @@ void LRUCache::Erase(const std::string &key) {
     LRUHandle *p = cache_[key];
     cache_.erase(p->key);
     delete p;
-    p = nullptr;
     --size_;
 }
 
@@ -223,6 +233,7 @@ private:
 public:
     explicit SharedLRUCache(size_t capacity) : last_id_(0) {
         const size_t per_shard = (capacity + (kNumShards - 1)) / kNumShards;
+        // auto per_shard = capacity;
         for (int s = 0; s < kNumShards; ++s) {
             shard_[s].SetCapacity(per_shard);
         }
@@ -234,7 +245,7 @@ public:
         return std::hash<std::string>{}(key);
     }
 
-    LRUHandle *Insert(const std::string &key, const std::string &value) override {
+    LRUHandle *Insert(std::string key, std::string value) override {
         auto hashCode = Hash(key);
         size_t index = hashCode % kNumShards;
         return shard_[index].Insert(key, value);
@@ -256,14 +267,4 @@ public:
 
 Cache *NewCache(size_t capacity) {
     return new SharedLRUCache(capacity);
-}
-
-using namespace std;
-
-int main() {
-    auto lru = NewCache(100);
-    string k = "hello", v = "world!";
-    lru->Insert(k, v);
-    // lru->Insert("hehe", "hehehev");
-    cout << lru->Lookup(k)->value << v << endl;
 }
