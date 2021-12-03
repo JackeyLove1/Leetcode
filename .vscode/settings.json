@@ -74,7 +74,8 @@
         "unordered_set": "cpp",
         "utility": "cpp",
         "random": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "condition_variable": "cpp"
     },
     "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python"
 }
