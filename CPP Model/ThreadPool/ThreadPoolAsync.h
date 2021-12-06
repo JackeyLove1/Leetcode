@@ -92,7 +92,8 @@ auto ThreadPool::enqueue(F &&f, Args &&... args)
 -> std::future<typename std::result_of<F(Args...)>::type> {
     // 使用萃取的方法获取返回值类型
     using return_type = typename std::result_of<F(Args...)>::type;
-
+    // 等价于
+    // using RetType = decltype(f(args...));
     // 将任务包装成异步函数指针，封装为shared_ptr 完后后自动回收，不造成内存泄漏
     // 而且在后续的lambda函数中可以直接传递函数指针然后执行
     // 使用packaged_task<>，函数绑定std::bind，和完美转发std::forward
