@@ -8,9 +8,11 @@
 #include <pthread.h>
 
 namespace C11 {
+    static std::once_flag once_control;
     template<typename T>
     class Singleton {
     public:
+    // 可以使用unique_ptr<>()
         static T *getInstance() {
             std::call_once(once_control, Singleton::init);
             return value_;
@@ -37,7 +39,7 @@ namespace C11 {
         }
 
         static T *value_;
-        static std::once_flag once_control;
+    
     };
 
     template<typename T> T *Singleton<T>::value_ = nullptr;
