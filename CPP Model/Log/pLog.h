@@ -1,31 +1,3 @@
-//
-// Created by Jacky on 2021/12/6.
-//
-
-#include <iostream>
-#include <utility>
-#include <future>
-#include <vector>
-#include <unordered_map>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-#include <cmath>
-#include <map>
-
-
-using namespace std;
-
-template<typename T>
-inline void print(vector<T> &nums) {
-    for_each(nums.begin(), nums.end(), [](T &t) { cout << t << " "; });
-    cout << endl;
-}
-
-//
-// Created by luqia on 2021/1/12.
-//
-
 #ifndef UNTITLED_PLOG_H
 #define UNTITLED_PLOG_H
 
