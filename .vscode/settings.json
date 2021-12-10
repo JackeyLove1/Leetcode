@@ -77,5 +77,6 @@
         "*.tcc": "cpp",
         "condition_variable": "cpp"
     },
-    "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python"
+    "python.pythonPath": "/Users/arexiusvan/anaconda3/bin/python",
+    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration"
 }
