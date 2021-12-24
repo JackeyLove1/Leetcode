@@ -45,3 +45,21 @@ public:
     }
 };
 
+class Solution2 {
+public:
+    int repeatedStringMatch(string a, string b) {
+        if (b.empty()) return 0;
+        a = static_cast<const string>(a);
+        b = static_cast<const string>(b);
+        if (a.find(b) != string::npos) return 1;
+        int cnt = b.size() / a.size();
+        string res;
+        for (int i = 1; i <= cnt + 2; ++i) {
+            res += a;
+            if (res.find(b) != string::npos) {
+                return i;
+            }
+        }
+        return -1;
+    }
+};
