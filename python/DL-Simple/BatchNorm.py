@@ -1,5 +1,6 @@
 import torch
 from torch import nn, optim
+import torch.nn.functional as F
 
 
 class GlobalAvgPool2d(nn.Module):
