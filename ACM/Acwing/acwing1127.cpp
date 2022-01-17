@@ -46,6 +46,7 @@ int n, m;
 int e[N], ne[N], h[N], w[N], idx;
 int dist[N], st[N];
 using PII = pair<int, int>;
+unordered_set<int> farms;
 
 inline void init() {
     memset(h, -1, sizeof h);
@@ -57,9 +58,9 @@ inline void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
 
-int dijkstra(int source, int target) {
-    memset(st, 0, sizeof st);
+int dijkstra(int source) {
     memset(dist, 0x3f, sizeof dist);
+    memset(st, 0, sizeof st);
     dist[source] = 0;
     priority_queue<PII, vector<PII>, greater<>> heap;
     heap.push({0, source}); // distance, ver
@@ -77,22 +78,36 @@ int dijkstra(int source, int target) {
             }
         }
     }
-    if (dist[target] == INF) return -1;
-    return dist[target];
+    int res = 0;
+    for (int target : farms) {
+        if (target != source) {
+            if(dist[target] == INF) return INF;
+            res += dist[target];
+        }
+    }
+    return res;
 }
 
 int main() {
     fhj();
-    int from, to;
-    cin >> n >> m >> from >> to;
-    int rs, re, ci;
+    int numbers;
+    cin >> numbers >> n >> m;
+    int number;
+    for (int i = 0; i < numbers; ++i) {
+        cin >> number;
+        farms.insert(number);
+    }
+    int a, b, c;
     init();
     for (int i = 0; i < m; ++i) {
-        cin >> rs >> re >> ci;
-        add(rs, re, ci);
-        add(re, rs, ci);
+        cin >> a >> b >> c;
+        add(a, b, c);
+        add(b, a, c);
     }
-    int res = dijkstra(from, to);
+    int res = INF;
+    for (auto source : farms) {
+        res = min(res, dijkstra(source));
+    }
     cout << res << endl;
     return 0;
 }

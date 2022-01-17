@@ -58,7 +58,6 @@ inline void add(int a, int b, int c) {
 }
 
 int dijkstra(int source, int target) {
-    memset(st, 0, sizeof st);
     memset(dist, 0x3f, sizeof dist);
     dist[source] = 0;
     priority_queue<PII, vector<PII>, greater<>> heap;
