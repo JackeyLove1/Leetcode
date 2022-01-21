@@ -24,8 +24,10 @@ void add(int h[],int a,int b,int c)
 
 void tarjan(int u)
 {
-    dfn[u] = low[u] = timestamp++;
-    stk[++top] = u,in_stk[u] = true;//stk[++top]要和stk[top--]配 而不是stk[top++] stk[0++] = u stk[1++] = t 
+    dfn[u] = low[u] = ++timestamp;
+    stk[++top] = u,in_stk[u] = true;
+    // stk[++top]要和stk[top--]配 而不是stk[top++] 
+    // stk[0++] = u stk[1++] = t 
 
     for(int i = h[u];~i;i=ne[i])
     {
@@ -44,7 +46,7 @@ void tarjan(int u)
         do
         {
             y = stk[top--];//忘了强连通分量都是通过dfs后在一个栈里的
-            in_stk[y] = false;//漏了
+            in_stk[y] = false;//不应该遗忘
             id[y] = scc_cnt;
             scc_size[scc_cnt]++;
         }while(y!=u);
