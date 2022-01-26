@@ -78,7 +78,7 @@ int main()
 
     printf("%d\n", dinic());
     // 如何找出最大流的边
-    // 就是找出
+    // 就是找出那些边是满的流量，就把它拿出来
     for (int i = 0; i < idx; i += 2)
         if (e[i] > m && e[i] <= n && !f[i])
             printf("%d %d\n", e[i ^ 1], e[i]);

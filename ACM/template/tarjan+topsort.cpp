@@ -79,7 +79,7 @@ int main()
             sum += Size[i];
             if (zeros > 1)
             {
-                sum = 0;
+                sum = 0;8
                 break;
             }
         }
