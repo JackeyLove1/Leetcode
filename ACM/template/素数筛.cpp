@@ -15,13 +15,15 @@ inline void get_prime() {
 
 
 // 埃式筛
+#include <cstring>
+
 int v[N];
-void primes(int n){
+void get_primes(int n){
     memset(v, 0, sizeof(v));
     for(int i = 2; i <= n; i++){
         if (v[i]) continue;
         cout << i << endl;
-        for(int j = i; j <= n / i; ++j){
+        for(int j = 2; j <= n / i; ++j){
             v[i * j] = 1;
         }
     }
