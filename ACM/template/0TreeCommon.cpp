@@ -31,3 +31,13 @@ inline void init() {
 inline void add(int a, int b, int c) {
     e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
 }
+
+inline vector<string> split(const string &lines) {
+    istringstream str(lines);
+    string out;
+    vector<string> outs;
+    while (str >> out) {
+        outs.push_back(out);
+    }
+    return outs;
+}
