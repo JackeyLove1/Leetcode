@@ -53,7 +53,7 @@ int n, m, ver;
 void add(int a, int b) {
     e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
-
+// 欧拉回路
 void dfs(int u) {
     for (int &i = h[u]; i != -1;) {
         if (used[i]) {  //如果这条边用过了
