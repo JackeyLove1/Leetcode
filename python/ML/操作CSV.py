@@ -11,3 +11,7 @@ with open(data_file, 'w') as f:
     f.write('NA,NA,140000\n')
 
 # 读取CSV文件
+import pandas as pd
+
+data = pd.read_csv(data_file)
+print(data)
