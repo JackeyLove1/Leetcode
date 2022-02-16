@@ -56,3 +56,55 @@ int main()
 
     return 0;
 }
+
+// 维护区间最大值
+typedef long long ll;
+const int Maxn = 2e5+10;
+ 
+int a[Maxn], h[Maxn], n;  // a[] 数列的值，h[] 区间最大值
+ 
+void add (int x, int val) {
+	while (x <= n) {
+		h[x] = max (h[x], val); 
+		x += x&(-x);
+	}
+}
+ 
+int query (int L, int R) {
+	int ret = 0, len = R-L+1;
+	while (len && R) {  // len 是当前还需要判断的范围长度，R是对应区间最大值的下标
+		if (len < (R&(-R))) {
+			ret = max (ret, a[R]);
+			R--; len--;
+		} else {
+			ret = max (ret, h[R]);
+			len -= (R&(-R)); // 不断的缩短要判断的区间长度
+			R -= (R&(-R)); 
+		}
+	}
+	return ret;
+}
+ 
+int main (void)
+{
+	int m;
+	while (scanf ("%d%d", &n, &m) != EOF) {
+		memset (h, 0, sizeof (h));
+		for (int i = 1; i <= n; ++i) {
+			scanf ("%d", &a[i]);
+			add (i, a[i]);
+		}
+		char op[2], b[10]; int x, y;
+		while (m--) {
+			scanf ("%s%d%d", op, &x, &y);
+			gets (b);
+			if (!strcmp (op, "U")) {
+				a[x] = y; add (x, y);				
+			} else {
+				printf ("%d\n", query (x, y));
+			}
+		}
+		
+	}
+	return 0;
+ } 
