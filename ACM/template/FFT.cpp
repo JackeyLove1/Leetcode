@@ -1,3 +1,16 @@
+/*
+给定一个 n 次多项式 F(x)=a0+a1x+a2x2+…+anxn。
+以及一个 m 次多项式 G(x)=b0+b1x+b2x2+…+bmxm。
+已知 H(x)=F(x)⋅G(x)=c0+c1x+c2x2+…+cn+mxn+m。
+请你计算并输出 c0,c1,…,cn+m。
+
+输入格式
+第一行包含两个整数 n,m。
+第二行包含 n+1 个整数 a0,a1,…,an。
+第三行包含 m+1 个整数 b0,b1,…,bm。
+输出格式
+共一行，依次输出 c0,c1,…,cn+m。
+*/
 #include <iostream>
 #include <cstring>
 #include <algorithm>
@@ -64,8 +77,3 @@ int main()
 
     return 0;
 }
-
-作者：yxc
-链接：https://www.acwing.com/activity/content/code/content/664840/
-来源：AcWing
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
