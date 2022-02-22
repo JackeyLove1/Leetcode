@@ -12,25 +12,34 @@ inline int euler_one(int n) {
     return res;
 }
 
-// 线性筛求欧拉函数
-const int N = 50007;
-int n, m;
-int vis[N];
-int primes[N], phi[N], cnt;
+const int N = 1e7 + 10;
+using ll = long long ;
+int primes[N], cnt;
+bool st[N];
+int phi[N];
+ll s[N];
 
-void get_euler(int n) {
-    phi[1] = 1;
-    for (int i = 2; i <= n; ++i) {
-        if (!vis[i]) { // i是一个质数
-            primes[++cnt] = i;
-            phi[i] = i - 1; // 质数的性质,欧拉函数等于这个质数减一
+
+void init(int n)
+{
+    for (int i = 2; i <= n; i ++ )
+    {
+        if (!st[i])
+        {
+            primes[cnt ++ ] = i;
+            phi[i] = i - 1;
         }
-        for (int j = 1; j <= cnt && i * primes[j] <= n; ++j) {
-            vis[i * primes[j]] = true;
-            if (i % primes[j] == 0) {//最小的质因子
+        for (int j = 0; primes[j] * i <= n && j < cnt; j ++ )
+        {
+            st[primes[j] * i] = true;
+            if (i % primes[j] == 0)//情况1 primes[j]是i的最小质因子
+            {
                 phi[i * primes[j]] = phi[i] * primes[j];
                 break;
-            } else phi[i * primes[j]] = phi[i] * (primes[j] - 1);
+            }
+            phi[i * primes[j]] = phi[i] * (primes[j] - 1);
         }
     }
+    // 求phi函数的前缀和
+    for (int i = 1; i <= n; i ++ ) s[i] = s[i - 1] + phi[i];
 }
