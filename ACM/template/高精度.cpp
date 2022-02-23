@@ -1,3 +1,4 @@
+// 推荐第二种方案bign
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
