@@ -48,3 +48,6 @@ from PIL import Image
 lena = mpimg.imread('lena.png') # 这里读入的数据是 float32 型的，范围是0-1
 im = Image.fromarray(np.uinit8(lena*255))
 
+# PIL image 转化为 numpy
+im_array = np.array(im)
+
