@@ -72,3 +72,9 @@ image = PIL.Image.fromarray(ndarray.astypde(np.uint8))
 # PIL.Image -> np.ndarray.
 ndarray = np.asarray(PIL.Image.open(path))
 
+
+def PILImage2CVImage(image):
+    return cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
+
+def CVImage2PILImage(image):
+    return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
