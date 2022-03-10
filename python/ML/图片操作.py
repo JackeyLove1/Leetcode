@@ -78,3 +78,8 @@ def PILImage2CVImage(image):
 
 def CVImage2PILImage(image):
     return Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+
+# 从url中获取图片
+from skimage import io
+def get_image_from_apth(url):
+    return io.imread(url)
