@@ -65,7 +65,7 @@ conn.close()
 import shelve
 
 with shelve.open('data') as db:
-    username = db['username']
+    username = db['username'] # 建议使用db.get(key)
     password = db['password']
 
 print(f'账号为：{username}')
