@@ -12,3 +12,7 @@ print(inputs)
 import torch
 X, y = torch.tensor(inputs.values), torch.tensor(outputs.values)
 X, y
+
+# SimpleImputer类提供了插补缺失值的基本策略。
+# 可以使用提供的常量或使用缺失值所在各列的统计量（平均值，中位数或众数）来估算缺失值。
+# 此类还支持不同的缺失值编码
