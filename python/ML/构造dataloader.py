@@ -2,7 +2,9 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 
-
+# 自定义dataset
+# 继承Dataset Class
+# 实现DataLoader
 class subDataset(Dataset):
     def __init__(self, Data, Label):
         self.Data = Data
@@ -38,5 +40,12 @@ if __name__ == "__main__":
             print(data[index])
             print(label[index])
 
-# 继承Dataset Class
-# 实现DataLoader
+# numpy构建数据集
+torch_dataset = Data.TensorDataset(x, y)
+
+loader = Data.DataLoader(
+    dataset = torch_dataset,
+    batch_size = BATCH_SIZE,
+    shuffle = True,# true表示数据每次epoch是是打乱顺序抽样的
+    num_workers = 2, # 每次训练有两个线程进行的？？？？？ 改成 1 和 2 暂时没看出区别
+)

@@ -1,5 +1,9 @@
+# 导入必要的包
+import torch 
+import torchvision 
+
 # torch加载mnist数据集
-DOWNLOAD_PATH = '../data/mnist'
+DOWNLOAD_PATH = './data'
 BATCH_SIZE_TRAIN = 100
 BATCH_SIZE_TEST = 1000
 
@@ -38,3 +42,19 @@ train_dataloader = DataLoader(train_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 
 # 加载iris数据集
+sklearn.datasets.load_iris(*, return_X_y=False, as_frame=False
+
+
+# 加载boston房价数据集
+from sklearn.datasets import load_boston
+X, y = load_boston(return_X_y=True)
+
+# 加载糖尿病数据集
+sklearn.datasets.load_diabetes(*, return_X_y=False, as_frame=False)
+
+# 加载数字数据集
+sklearn.datasets.load_digits(*, n_class=10, return_X_y=False, as_frame=False)
+
+# 加载乳腺癌数据集
+sklearn.datasets.load_breast_cancer(*, return_X_y=False, as_frame=False)
+
