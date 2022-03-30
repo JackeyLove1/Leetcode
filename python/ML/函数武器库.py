@@ -62,3 +62,16 @@ def get_all_click_df(data_path='./data_raw/', offline=True):
     all_click = all_click.drop_duplicates((['user_id', 'click_article_id', 'click_timestamp']))
     return all_click
 
+# 忽略警告
+import warnings
+warnings.filterwarnings("ignore")
+
+# 使用进度条
+from tqdm import tqdm #从tqdm库中导入tadm类
+
+for epoch in range(epochs): #训练轮次
+    with tqdm(total = batch_num, desc=f'Epoch {epoch+1}/{epochs}', unit='it') as pbar: #创建一个进度条
+        for batch_idx in range(batch_num): #mini-batch训练
+            ...
+            pbar.set_postfix({'batch_loss:'loss}) #在进度条后显示当前batch的损失
+            pbar.update(1) #更当前进度，1表示完成了一个batch的训练

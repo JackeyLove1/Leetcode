@@ -43,7 +43,7 @@ test_dataloader = DataLoader(test_data, batch_size=64)
 
 # 加载iris数据集
 sklearn.datasets.load_iris(*, return_X_y=False, as_frame=False
-
+X, y = datasets.load_iris(return_X_y=True)
 
 # 加载boston房价数据集
 from sklearn.datasets import load_boston
@@ -57,4 +57,62 @@ sklearn.datasets.load_digits(*, n_class=10, return_X_y=False, as_frame=False)
 
 # 加载乳腺癌数据集
 sklearn.datasets.load_breast_cancer(*, return_X_y=False, as_frame=False)
+
+# load_array, data_iter即为迭代器
+true_w = torch.tensor([2, -3.4])
+true_b = 4.2
+features, labels = d2l.synthetic_data(true_w, true_b, 1000)
+def load_array(data_arrays, batch_size, is_train=True):  #@save
+    """构造一个PyTorch数据迭代器"""
+    dataset = data.TensorDataset(*data_arrays)
+    return data.DataLoader(dataset, batch_size, shuffle=is_train)
+batch_size = 10
+data_iter = load_array((features, labels), batch_size)
+
+# MNIST数据集
+from torchvision import datasets
+
+data_root = './output/mnist'
+num_workers = 4
+batch_size = 64
+
+dataset = datasets.MNIST(root=data_root, download=True, transform=None)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+
+# Fashion MNIST数据集
+data_root = './fasionmnist'
+dataset = datasets.FashionMNIST(root=data_root, download=True, transform=None)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+
+# ImageNet
+data_root = './imagenet'
+dataset = datasets.ImageNet(root=data_root, split='train', download=True, transform=None)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+
+# cifa10      
+data_root = './cifar10'
+dataset = datasets.CIFAR10(root=data_root, download=True, transform=None)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+
+# cifa10
+#超参数定义
+EPOCH = 100
+BATCH_SIZE = 64
+LR = 0.001
+#数据集加载
+transform_train = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomGrayscale(),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+transform_test = transforms.Compose([     
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+#将数据加载进来，本地已经下载好， root=os.getcwd()为自动获取与源码文件同级目录下的数据集路径   
+train_data = datasets.CIFAR10(root=os.getcwd(), train=True,transform=transform_train,download=False)
+test_data =datasets.CIFAR10(root=os.getcwd(),train=False,transform=transform_test,download=False)
+#数据分批
+from torch.utils.data import DataLoader
+train_loader = DataLoader(dataset=train_data,batch_size=BATCH_SIZE,shuffle=True,num_workers=2)
+test_loader = DataLoader(dataset=test_data,batch_size=BATCH_SIZE,shuffle=True,num_workers=2)
 

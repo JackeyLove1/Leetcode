@@ -1,3 +1,17 @@
+# 通用
+def weight_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv2d') != -1:
+        torch.nn.init.normal_(m.weight.data)
+        torch.nn.init.constant_(m.bias.data, 0.0)
+    elif classname.find('Linear') != -1:
+        torch.nn.init.normal_(m.weight)
+        torch.nn.init.constant_(m.bias, 0.0)
+    elif classname.find('BatchNorm2d'):
+        torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
+        torch.nn.init.constant_(m.bias.data, 0.0)
+
+
 # Xavier 均匀分布:torch.nn.init.xavier_uniform_(tensor, gain = 1), 服从均匀分布U(-a, a)， 
 # 分布参数a=gain * sqrt(6 / (fan_in + fan_out)), gain的大小由激活函数的类型来决定。
 # 其中fan_in是指第i层神经元的个数，fan_out是指第i + 1层神经元的个数
@@ -34,7 +48,7 @@ def weight_init(m):
          torch.nn.init.xavier_normal_(m.weight.data)
          torch.nn.init.constant_(m.bias.data, 0.0)
     elif classname.find('Linear') != -1:
-         torch.nn.init.xavier_norrmal_(m.weight)
+         torch.nn.init.xavier_normal_(m.weight)
          torch.nn.init.constant_(m.bias, 0.0)
 
 model= Model();
