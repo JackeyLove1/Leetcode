@@ -35,3 +35,8 @@ print(imp.fit_transform(df))
 # pandas 重新命名
 item_df = item_df.rename(columns={'article_id': 'click_article_id'})  #重命名，方便后续match
 
+
+# 数据放缩到（-1，1）
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler(feature_range=(-1,1))
+train_data_normalized = scaler.fit_transform(train_data.reshape(-1,1))

@@ -26,6 +26,7 @@ features, labels = torch.tensor(Xs, dtype=torch.float), torch.tensor(y, dtype=to
 
 
 # 将tensor转换为torch迭代器
+# 可以自己构造Dataset
 def load_array(data_arrays, batch_size, is_train=True):  # @save
     """构造一个PyTorch数据迭代器"""
     dataset = data.TensorDataset(*data_arrays)

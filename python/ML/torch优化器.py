@@ -11,3 +11,7 @@ opt_RMSprop     = torch.optim.RMSprop(net_RMSprop.parameters(), lr=LR, alpha=0.9
 # Adam 参数betas=(0.9, 0.99)
 opt_Adam        = torch.optim.Adam(net_Adam.parameters(), lr=LR, betas=(0.9, 0.99))
 
+# scheduler
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=1)
+scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=[lambda epoch: 0.95 ** epoch])
+scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5)

@@ -1,3 +1,4 @@
+import torchvision.models as models
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -105,3 +106,71 @@ for j, data in enumerate(test_loader):
     total = total + labels.size(0)
     correct = correct + (predicted == labels).sum().item()
 print('准确率：{:.4f}%'.format(100.0 * correct / total))
+
+# https://pytorch.org/vision/stable/models.html
+
+import torchvision.models as models
+resnet18 = models.resnet18(pretrained=True)
+alexnet = models.alexnet(pretrained=True)
+squeezenet = models.squeezenet1_0(pretrained=True)
+vgg16 = models.vgg16(pretrained=True)
+densenet = models.densenet161(pretrained=True)
+inception = models.inception_v3(pretrained=True)
+googlenet = models.googlenet(pretrained=True)
+shufflenet = models.shufflenet_v2_x1_0(pretrained=True)
+mobilenet_v2 = models.mobilenet_v2(pretrained=True)
+mobilenet_v3_large = models.mobilenet_v3_large(pretrained=True)
+mobilenet_v3_small = models.mobilenet_v3_small(pretrained=True)
+resnext50_32x4d = models.resnext50_32x4d(pretrained=True)
+wide_resnet50_2 = models.wide_resnet50_2(pretrained=True)
+mnasnet = models.mnasnet1_0(pretrained=True)
+efficientnet_b0 = models.efficientnet_b0(pretrained=True)
+efficientnet_b1 = models.efficientnet_b1(pretrained=True)
+efficientnet_b2 = models.efficientnet_b2(pretrained=True)
+efficientnet_b3 = models.efficientnet_b3(pretrained=True)
+efficientnet_b4 = models.efficientnet_b4(pretrained=True)
+efficientnet_b5 = models.efficientnet_b5(pretrained=True)
+efficientnet_b6 = models.efficientnet_b6(pretrained=True)
+efficientnet_b7 = models.efficientnet_b7(pretrained=True)
+regnet_y_400mf = models.regnet_y_400mf(pretrained=True)
+regnet_y_800mf = models.regnet_y_800mf(pretrained=True)
+regnet_y_1_6gf = models.regnet_y_1_6gf(pretrained=True)
+regnet_y_3_2gf = models.regnet_y_3_2gf(pretrained=True)
+regnet_y_8gf = models.regnet_y_8gf(pretrained=True)
+regnet_y_16gf = models.regnet_y_16gf(pretrained=True)
+regnet_y_32gf = models.regnet_y_32gf(pretrained=True)
+regnet_x_400mf = models.regnet_x_400mf(pretrained=True)
+regnet_x_800mf = models.regnet_x_800mf(pretrained=True)
+regnet_x_1_6gf = models.regnet_x_1_6gf(pretrained=True)
+regnet_x_3_2gf = models.regnet_x_3_2gf(pretrained=True)
+regnet_x_8gf = models.regnet_x_8gf(pretrained=True)
+regnet_x_16gf = models.regnet_x_16gf(pretrainedTrue)
+regnet_x_32gf = models.regnet_x_32gf(pretrained=True)
+vit_b_16 = models.vit_b_16(pretrained=True)
+vit_b_32 = models.vit_b_32(pretrained=True)
+vit_l_16 = models.vit_l_16(pretrained=True)
+vit_l_32 = models.vit_l_32(pretrained=True)
+convnext_tiny = models.convnext_tiny(pretrained=True)
+convnext_small = models.convnext_small(pretrained=True)
+convnext_base = models.convnext_base(pretrained=True)
+convnext_large = models.convnext_large(pretrained=True)
+
+import torchvision.models as models
+googlenet = models.quantization.googlenet()
+inception_v3 = models.quantization.inception_v3()
+mobilenet_v2 = models.quantization.mobilenet_v2()
+mobilenet_v3_large = models.quantization.mobilenet_v3_large()
+resnet18 = models.quantization.resnet18()
+resnet50 = models.quantization.resnet50()
+resnext101_32x8d = models.quantization.resnext101_32x8d()
+shufflenet_v2_x0_5 = models.quantization.shufflenet_v2_x0_5()
+shufflenet_v2_x1_0 = models.quantization.shufflenet_v2_x1_0()
+shufflenet_v2_x1_5 = models.quantization.shufflenet_v2_x1_5()
+shufflenet_v2_x2_0 = models.quantization.shufflenet_v2_x2_0()
+
+import torchvision.models as models
+model = models.quantization.mobilenet_v2(pretrained=True, quantize=True)
+model.eval()
+# run the model with quantized inputs and weights
+out = model(torch.rand(1, 3, 224, 224))
+

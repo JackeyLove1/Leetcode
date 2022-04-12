@@ -177,3 +177,16 @@ transform = transforms.Compose([Resize(224), ToTensor()])
 image_folder = datasets.ImageFolder('./shapes/train', transform=transform)
 dataloader = DataLoader(image_folder, batch_size=4, shuffle=True, num_workers=4)
 
+model = create_model('resnet18', num_classes)
+plot_results(train(dataloader, model))
+
+model = create_model('densenet201', num_classes)
+plot_results(train(dataloader, model))
+
+model = create_model('googlenet', num_classes)
+plot_results(train(dataloader, model))
+
+
+model = create_model('shufflenet_v2_x1_0', num_classes)
+plot_results(train(dataloader, model))
+

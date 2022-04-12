@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
+import torch.utils.data as Data
 
 # 自定义dataset
 # 继承Dataset Class
@@ -46,6 +47,14 @@ torch_dataset = Data.TensorDataset(x, y)
 loader = Data.DataLoader(
     dataset = torch_dataset,
     batch_size = BATCH_SIZE,
-    shuffle = True,# true表示数据每次epoch是是打乱顺序抽样的
-    num_workers = 2, # 每次训练有两个线程进行的？？？？？ 改成 1 和 2 暂时没看出区别
+    shuffle = True,
+    num_workers = 2, 
 )
+
+from torch.utils import data
+def load_array(data_arrays, batch_size, is_train=True):
+    """构造一个PyTorch数据迭代器
+
+    Defined in :numref:`sec_linear_concise`"""
+    dataset = data.TensorDataset(*data_arrays)
+    return data.DataLoader(dataset, batch_size, shuffle=is_train)
