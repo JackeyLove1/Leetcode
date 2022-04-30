@@ -1,4 +1,12 @@
-#include<bits/stdc++.h>
+#include<iostream>
+/*
+插入数值x。
+删除数值x(若有多个相同的数，应只删除一个)。
+查询数值x的排名(若有多个相同的数，应输出最小的排名)。
+查询排名为x的数值。
+求数值x的前驱(前驱定义为小于x的最大的数)。
+求数值x的后继(后继定义为大于x的最小的数)。
+*/
 using namespace std;
 const int N = 100010, INF = 1e8;
 int n;
@@ -22,6 +30,21 @@ int new_node(int k)
     tr[idx].size = 1;
     return idx;
 }
+/*----------------------------------------------------------------
+void zig(int &p)    // 右旋
+{
+    int q = tr[p].l;
+    tr[p].l = tr[q].r, tr[q].r = p, p = q;
+    pushup(tr[p].r), pushup(p);
+}
+
+void zag(int &p)    // 左旋
+{
+    int q = tr[p].r;
+    tr[p].r = tr[q].l, tr[q].l = p, p = q;
+    pushup(tr[p].l), pushup(p);
+}
+*/
 void zig(int &u)//左右旋，没啥好说的，自己在纸上画一下就知道了
 {
     int q = tr[u].l;
@@ -140,6 +163,6 @@ int main()
         else if(op == 4) cout << get_key(root, x + 1) << endl;
         else if(op == 5) cout << get_pr(root, x) << endl;
         else cout << get_ne(root, x) << endl;//读入操作并进行处理
-    }//结束了！！！下次再见！！
+    }
     return 0;
 }
