@@ -60,7 +60,9 @@ train_dataloader = DataLoader(train_data, batch_size=64)
 test_dataloader = DataLoader(test_data, batch_size=64)
 
 # 加载iris数据集
-sklearn.datasets.load_iris(*, return_X_y=False, as_frame=False
+sklearn.datasets.load_iris(*, return_X_y=False, as_frame=False)
+X, y = datasets.load_iris(return_X_y=True)
+from sklearn import datasets
 X, y = datasets.load_iris(return_X_y=True)
 
 # 加载boston房价数据集
