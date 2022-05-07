@@ -12,8 +12,6 @@
 
 #include <mutex>
 
-// 初始化控制
-static std::once_flag init_flag;
 
 template<typename T>
 class Singleton {
@@ -27,6 +25,8 @@ public:
     }
 
     static T *getInstance() {
+        // 初始化控制
+        static std::once_flag init_flag;
         std::call_once(init_flag, init);
         return value_;
     }
@@ -50,7 +50,6 @@ private:
 private:
     // 单例对象
     static T *value_;
-
 };
 
 // 单例对象
