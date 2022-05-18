@@ -2,6 +2,8 @@
 // Created by Jacky on 2022/5/15.
 //
 
+// write 1000000 "Hello, World" will cause segment fault
+
 #include <queue>
 #include <mutex>
 #include <condition_variable>

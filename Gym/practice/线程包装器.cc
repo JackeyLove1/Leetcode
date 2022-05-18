@@ -33,3 +33,6 @@ public:
     }
 
 };
+
+// using std::bind to bind a concrete function as follows:
+// explicit AsyncWriter() : count_(0), stop_(false), write_(std::bind(&AsyncWriter::threadFunc, this)) {}
