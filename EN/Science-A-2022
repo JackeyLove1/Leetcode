@@ -223,4 +223,12 @@
  
 101. tf off07 set04
 
-102. 
+102. tf off09 set04
+    tf off10 set04
+
+103. tf off13 set04
+    tf off20 set01
+
+104 tf off24 set01
+    tf off27 set01
+
