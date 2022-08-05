@@ -6,7 +6,7 @@
 using namespace std;
 
 typedef long long LL;
-
+using ll = long long;
 const int N = 100010;
 
 int n, m;
@@ -14,7 +14,7 @@ int w[N];
 struct Node
 {
     int l, r;
-    LL sum, add;
+    ll sum, add;
 }tr[N * 4];
 
 void pushup(int u)
@@ -27,8 +27,8 @@ void pushdown(int u)
     auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
     if (root.add)
     {
-        left.add += root.add, left.sum += (LL)(left.r - left.l + 1) * root.add;
-        right.add += root.add, right.sum += (LL)(right.r - right.l + 1) * root.add;
+        left.add += root.add, left.sum += (ll)(left.r - left.l + 1) * root.add;
+        right.add += root.add, right.sum += (ll)(right.r - right.l + 1) * root.add;
         root.add = 0;
     }
 }
@@ -49,7 +49,7 @@ void modify(int u, int l, int r, int d)
 {
     if (tr[u].l >= l && tr[u].r <= r)
     {
-        tr[u].sum += (LL)(tr[u].r - tr[u].l + 1) * d;
+        tr[u].sum += (ll)(tr[u].r - tr[u].l + 1) * d;
         tr[u].add += d;
     }
     else    // 一定要分裂
@@ -62,13 +62,13 @@ void modify(int u, int l, int r, int d)
     }
 }
 
-LL query(int u, int l, int r)
+ll query(int u, int l, int r)
 {
     if (tr[u].l >= l && tr[u].r <= r) return tr[u].sum;
 
     pushdown(u);
     int mid = tr[u].l + tr[u].r >> 1;
-    LL sum = 0;
+    ll sum = 0;
     if (l <= mid) sum = query(u << 1, l, r);
     if (r > mid) sum += query(u << 1 | 1, l, r);
     return sum;
