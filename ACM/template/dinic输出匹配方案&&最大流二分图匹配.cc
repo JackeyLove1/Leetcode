@@ -67,6 +67,7 @@ int dinic()
 int main()
 {
     scanf("%d%d", &m, &n);
+    // 设置超级源点
     S = 0, T = n + 1;
     memset(h, -1, sizeof h);
     for (int i = 1; i <= m; i ++ ) add(S, i, 1);
@@ -74,7 +75,7 @@ int main()
 
     int a, b;
     while (cin >> a >> b, a != -1) add(a, b, 1);
-
+    
     printf("%d\n", dinic());
     for (int i = 0; i < idx; i += 2)
         if (e[i] > m && e[i] <= n && !f[i])

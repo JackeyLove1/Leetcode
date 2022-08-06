@@ -77,13 +77,24 @@ int dinic() {
 
 int main() {
     fhj();
-    cin >> n >> m >> S >> T;
+    cin >> m >> n;
     memset(h, -1, sizeof h);
-    while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        add(a, b, c);
+    S = 0, T = n + 1; // set super source target
+    for (int i = 1; i <= m; ++i) {
+        add(S, i, 1);
+    }
+    for (int i = m + 1; i <= n; ++i) {
+        add(i, T, 1);
+    }
+    int a, b;
+    while (cin >> a >> b && a != -1 && b != -1) {
+        add(a, b, 1);
     }
     cout << dinic() << endl;
+    for (int i = 0; i < idx; i += 2) {
+        if (e[i] > m && e[i] <= n && !f[i]) {
+            cout << e[i ^ 1] << " " << e[i] << endl;
+        }
+    }
     return 0;
 }

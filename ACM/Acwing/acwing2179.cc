@@ -77,13 +77,37 @@ int dinic() {
 
 int main() {
     fhj();
-    cin >> n >> m >> S >> T;
+    cin >> m >> n;
     memset(h, -1, sizeof h);
-    while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        add(a, b, c);
+    S = 0, T = n + m + 1; // set super source target
+    int x, people_num = 0;
+    for (int i = 1; i <= m; ++i) {
+        cin >> x;
+        people_num += x;
+        add(S, i, x);
     }
-    cout << dinic() << endl;
+    for (int i = m + 1; i <= n + m; ++i) {
+        cin >> x;
+        add(i, T, x);
+    }
+    for (int i = 1; i <= m; ++i) {
+        for (int j = m + 1; j <= n + m; ++j) {
+            add(i, j, 1);
+        }
+    }
+    auto max_flow = dinic();
+    if (max_flow != people_num) {
+        cout << 0 << endl;
+    } else {
+        cout << 1 << endl;
+        for (int i = 1; i <= m; ++i) {
+            for (int j = h[i]; j != -1; j = ne[j]) {
+                if (e[j] > m && e[j] <= n + m && !f[j]) {
+                    cout << e[j] - m <<" ";
+                }
+            }
+            cout << endl;
+        }
+    }
     return 0;
 }
