@@ -1,3 +1,15 @@
+/*
+1 不等式建图
+2 超级源点
+3 tarjan
+4 建立新DAG
+5 如果SCC内部有1边，返回无解
+6 按照DAG跑一边求从0点到每个SCC的最长路
+7 加总每个SCC的最长路 * SCC的size
+关键是差分约束的转化
+最后的坑：
+N个点，要开4*N的边。
+*/
 #include <cstdio>
 #include <cstring>
 #include <iostream>
