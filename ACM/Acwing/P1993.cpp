@@ -26,7 +26,7 @@ using ull = unsigned long long;
 using ll = long long;
 using PII = pair<int, int>;
 
-constexpr int N = 1e5 + 100, M = 2e5 + 100, INF = 0x3f3f3f3f;
+constexpr int N = 1e4 + 100, M = 1e5 + 100, INF = 0x3f3f3f3f;
 int n, m;
 int h[N], w[M], e[M], ne[M], idx;
 int dist[N], cnt[N];
@@ -37,6 +37,7 @@ static inline void add(int a, int b, int c) {
 }
 
 int spfa(int start, int times) {
+    memset(st, 0, sizeof st);
     memset(dist, 0x3f, sizeof dist);
     dist[start] = 0;
     st[start] = true;
@@ -46,6 +47,9 @@ int spfa(int start, int times) {
     while (!q.empty()) {
         int t = q.front();
         q.pop();
+        if (cnt[t] > times + 1) { // add super source
+            return INF; // exists negative cycle
+        }
         st[t] = false;
         for (int i = h[t]; i != -1; i = ne[i]) {
             int j = e[i];
@@ -54,6 +58,7 @@ int spfa(int start, int times) {
                 if (!st[j]) {
                     q.push(j);
                     st[j] = true;
+                    cnt[j]++;
                 }
             }
         }
@@ -67,14 +72,29 @@ int main() {
     memset(h, -1, sizeof h);
 
     while (m--) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        add(a, b, c);
+        int t, a, b, c;
+        cin >> t;
+        if (t == 1) {
+            cin >> a >> b >> c;
+            add(a, b, -c);
+        } else if (t == 2) {
+            cin >> a >> b >> c;
+            add(b, a, c);
+        } else {
+            cin >> a >> b;
+            add(a, b, 0);
+            add(b, a, 0);
+        }
+    }
+    for (int i = 1; i <= n; ++i) {
+        add(0, i, 0);
     }
 
-    int t = spfa(1, n);
-    if (t == INF) cout << "impossible" << endl;
-    else cout << t << endl;
+    int t = spfa(0, n);
+    if (t == INF) cout << "No" << endl;
+    else {
+        cout << "Yes" << endl;
+    }
 
     return 0;
 }
