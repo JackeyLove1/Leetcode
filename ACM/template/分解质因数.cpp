@@ -1,4 +1,5 @@
 #include<iostream>
+#include <map>
 using namespace std;
 
 //若x是合数，那么它的最大的质因子不会超过sqrt(x)。
@@ -15,6 +16,27 @@ void divide(int x) {
     }
     if (x != 1) cout << x << " " << 1 << endl;  //x中说明存在大于sqrt(x)的质因子，且质因子就是它本身。
     cout << endl;
+}
+
+// 获取分解质因数
+map<int,int> primes;
+inline void getPrimes(int x) {
+    for (int i = 2; i <= x / i; i++) {  
+        if (x % i == 0) {
+            int s = 0;
+            while (x % i == 0) {
+                x /= i;
+                s++;
+            }
+            primes.emplace(i, s);
+            // cout << i << " " << s << endl;
+        }
+    }
+    if (x != 1) {
+        primes.emplace(x, 1);
+        // cout << x << " " << 1 << endl; 
+    }
+    // cout << endl;
 }
 
 int main() {
