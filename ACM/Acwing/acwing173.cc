@@ -65,3 +65,19 @@ int main() {
     }
     return 0;
 }
+
+scp /data00/bytenas/output/bin/server/blockserver tiger@[fdbd:dc05:2:33a::141]:/opt/tiger/bytenas/deploy/bin/blockserver
+
+fio -directory=fio -size=30g -thread -group_reporting -direct=1 -ioengine=libaio -bs=4k -rw=read -iodepth=128 -name=write_201g_4k -continue_on_error=none -fallocate=none write_201g_4k: (g=0): rw=read, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128
+
+/opt/tiger/metricserver2/tools/grep_metric_1.sh | grep 'bytenas.blockserver.entry.blob.num.per.segment'
+
+scp blockserver tiger@[fdbd:dc05:2:33a::141]:/opt/tiger/bytenas/deploy/bin/blockserver
+
+
+10.206.99.145
+10.206.122.99
+10.206.106.135
+10.206.122.97
+
+scp -r tiger@10.37.155.81:/opt/tmp/consul_agent
