@@ -25,7 +25,7 @@ void add(int a, int b, int c, int d)
 bool spfa()
 {
     int hh = 0, tt = 1;
-    memset(d, -0x3f, sizeof d);
+    memset(d, -0x3f, sizeof d); // 最小流可以改为memset(d, 0x3f, sizeof d)
     memset(incf, 0, sizeof incf);
     q[0] = S, d[S] = 0, incf[S] = INF;
     while (hh != tt)
@@ -37,7 +37,7 @@ bool spfa()
         for (int i = h[t]; ~i; i = ne[i])
         {
             int ver = e[i];
-            if (f[i] && d[ver] < d[t] + w[i])
+            if (f[i] && d[ver] < d[t] + w[i]) // 最小流可以改为d[ver] > d[t] + w[i]
             {
                 d[ver] = d[t] + w[i];
                 pre[ver] = i;
