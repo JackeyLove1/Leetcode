@@ -9,7 +9,7 @@ const int N = 1e5 + 10, M = N << 1;
 
 int n, m;
 int h[N], w[N], e[M], ne[M], idx; //建树
-int id[N], nw[N], cnt; //id:节点的dfn序编号，nw[id[i]]是i的权值w（w -> nw的映射）
+int id[N], nw[N], cnt; //id:节点的dfs序编号，nw[id[i]]是i的权值w（w -> nw的映射）
 int dep[N], sz[N], top[N], fa[N], son[N];
 //sz:子树节点个数，top:重链的顶点，son:重儿子，fa:父节点
 struct SegmentTree
@@ -24,6 +24,7 @@ void add(int a, int b)
 }
 //dfs1预处理
 // 求出当前节点的子节点的数目，深度，和对应的重节点
+// 求每个点的重儿子是谁
 void dfs1(int u, int father, int depth)
 {
     dep[u] = depth, fa[u] = father, sz[u] = 1;
@@ -39,11 +40,14 @@ void dfs1(int u, int father, int depth)
 
 //dfs2做剖分（t是重链的顶点）
 // 求出当前点所在重链的编号
+// 求dfs序
 void dfs2(int u, int t)
 {
+    // top[u]当前点所在重链的顶点为t
+    // dfs序列数组id,和权值数组nw
     id[u] = ++ cnt, nw[cnt] = w[u], top[u] = t;
     if (!son[u]) return; //叶节点结束
-    dfs2(son[u], t); //重儿子重链剖分
+    dfs2(son[u], t); //优先搜索重儿子，重儿子重链剖分
     //处理轻儿子
     for (int i = h[u]; ~i; i = ne[i])
     {
@@ -73,6 +77,7 @@ void pushdown(int u)
     }
 }
 
+// 用重连剖分的dfs序构建线段树
 void build(int u, int l, int r)
 {
     tr[u] = {l, r, nw[r], 0};
@@ -188,35 +193,51 @@ int main()
 /*
 // yxc
 
-#include <iostream>
+#include <cstdio>
 #include <cstring>
+#include <cstdlib>
+#include <iostream>
 #include <algorithm>
+#include <functional>
+#include <numeric>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <cmath>
+#include <unordered_map>
+#include <unordered_set>
+
 
 using namespace std;
 
-typedef long long LL;
+static inline void fhj() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
+}
+
+using ull = unsigned long long;
+using LL = long long;
+using PII = pair<int, int>;
+
 const int N = 100010, M = N * 2;
 
 int n, m;
 int w[N], h[N], e[M], ne[M], idx;
 int id[N], nw[N], cnt;
 int dep[N], sz[N], top[N], fa[N], son[N];
-struct Tree
-{
+struct Tree {
     int l, r;
     LL add, sum;
-}tr[N * 4];
+} tr[N * 4];
 
-void add(int a, int b)
-{
-    e[idx] = b, ne[idx] = h[a], h[a] = idx ++ ;
+inline void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
 }
 
-void dfs1(int u, int father, int depth)
-{
+void dfs1(int u, int father, int depth) {
     dep[u] = depth, fa[u] = father, sz[u] = 1;
-    for (int i = h[u]; ~i; i = ne[i])
-    {
+    for (int i = h[u]; i != -1; i = ne[i]) {
         int j = e[i];
         if (j == father) continue;
         dfs1(j, u, depth + 1);
@@ -225,37 +246,32 @@ void dfs1(int u, int father, int depth)
     }
 }
 
-void dfs2(int u, int t)
-{
-    id[u] = ++ cnt, nw[cnt] = w[u], top[u] = t;
+void dfs2(int u, int t) {
+
+    id[u] = ++cnt, nw[cnt] = w[u], top[u] = t;
     if (!son[u]) return;
     dfs2(son[u], t);
-    for (int i = h[u]; ~i; i = ne[i])
-    {
+    for (int i = h[u]; ~i; i = ne[i]) {
         int j = e[i];
         if (j == fa[u] || j == son[u]) continue;
         dfs2(j, j);
     }
 }
 
-void pushup(int u)
-{
+inline void pushup(int u) {
     tr[u].sum = tr[u << 1].sum + tr[u << 1 | 1].sum;
 }
 
-void pushdown(int u)
-{
+inline void pushdown(int u) {
     auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
-    if (root.add)
-    {
+    if (root.add) {
         left.add += root.add, left.sum += root.add * (left.r - left.l + 1);
         right.add += root.add, right.sum += root.add * (right.r - right.l + 1);
         root.add = 0;
     }
 }
 
-void build(int u, int l, int r)
-{
+void build(int u, int l, int r) {
     tr[u] = {l, r, 0, nw[r]};
     if (l == r) return;
     int mid = l + r >> 1;
@@ -263,10 +279,8 @@ void build(int u, int l, int r)
     pushup(u);
 }
 
-void update(int u, int l, int r, int k)
-{
-    if (l <= tr[u].l && r >= tr[u].r)
-    {
+void update(int u, int l, int r, int k) {
+    if (l <= tr[u].l && r >= tr[u].r) {
         tr[u].add += k;
         tr[u].sum += k * (tr[u].r - tr[u].l + 1);
         return;
@@ -278,8 +292,7 @@ void update(int u, int l, int r, int k)
     pushup(u);
 }
 
-LL query(int u, int l, int r)
-{
+LL query(int u, int l, int r) {
     if (l <= tr[u].l && r >= tr[u].r) return tr[u].sum;
     pushdown(u);
     int mid = tr[u].l + tr[u].r >> 1;
@@ -289,10 +302,8 @@ LL query(int u, int l, int r)
     return res;
 }
 
-void update_path(int u, int v, int k)
-{
-    while (top[u] != top[v])
-    {
+void update_path(int u, int v, int k) {
+    while (top[u] != top[v]) {
         if (dep[top[u]] < dep[top[v]]) swap(u, v);
         update(1, id[top[u]], id[u], k);
         u = fa[top[u]];
@@ -301,11 +312,9 @@ void update_path(int u, int v, int k)
     update(1, id[v], id[u], k);
 }
 
-LL query_path(int u, int v)
-{
+LL query_path(int u, int v) {
     LL res = 0;
-    while (top[u] != top[v])
-    {
+    while (top[u] != top[v]) {
         if (dep[top[u]] < dep[top[v]]) swap(u, v);
         res += query(1, id[top[u]], id[u]);
         u = fa[top[u]];
@@ -315,55 +324,46 @@ LL query_path(int u, int v)
     return res;
 }
 
-void update_tree(int u, int k)
-{
+void update_tree(int u, int k) {
     update(1, id[u], id[u] + sz[u] - 1, k);
 }
 
-LL query_tree(int u)
-{
+LL query_tree(int u) {
     return query(1, id[u], id[u] + sz[u] - 1);
 }
 
-int main()
-{
-    scanf("%d", &n);
-    for (int i = 1; i <= n; i ++ ) scanf("%d", &w[i]);
+int main() {
+    fhj();
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> w[i];
     memset(h, -1, sizeof h);
-    for (int i = 0; i < n - 1; i ++ )
-    {
+    for (int i = 0; i < n - 1; i++) {
         int a, b;
-        scanf("%d%d", &a, &b);
+        cin >> a >> b;
         add(a, b), add(b, a);
     }
     dfs1(1, -1, 1);
     dfs2(1, 1);
     build(1, 1, n);
 
-    scanf("%d", &m);
-    while (m -- )
-    {
+    cin >> m;
+    while (m--) {
         int t, u, v, k;
-        scanf("%d%d", &t, &u);
-        if (t == 1)
-        {
-            scanf("%d%d", &v, &k);
+        cin >> t >> u;
+        if (t == 1) {
+            cin >> v >> k;
             update_path(u, v, k);
-        }
-        else if (t == 2)
-        {
-            scanf("%d", &k);
+        } else if (t == 2) {
+            cin >> k;
             update_tree(u, k);
-        }
-        else if (t == 3)
-        {
-            scanf("%d", &v);
+        } else if (t == 3) {
+            cin >> v;
             printf("%lld\n", query_path(u, v));
-        }
-        else printf("%lld\n", query_tree(u));
+        } else printf("%lld\n", query_tree(u));
     }
 
     return 0;
 }
+
 
 */
