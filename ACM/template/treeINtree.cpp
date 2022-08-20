@@ -37,7 +37,7 @@ void rotate(int x)
     pushup(y), pushup(x);
 }
 
-void splay(int& root, int x, int k)
+void (int& root, int x, int k)
 {
     while (tr[x].p != k)
     {
@@ -57,7 +57,7 @@ void insert(int& root, int v)
     u = ++ idx;
     if (p) tr[p].s[v > tr[p].v] = u;
     tr[u].init(v, p);
-    splay(root, u, 0);
+    (root, u, 0);
 }
 
 int get_k(int root, int v)
@@ -80,11 +80,11 @@ void update(int& root, int x, int y)
         if (tr[u].v < x) u = tr[u].s[1];
         else u = tr[u].s[0];
     }
-    splay(root, u, 0);
+    (root, u, 0);
     int l = tr[u].s[0], r = tr[u].s[1];
     while (tr[l].s[1]) l = tr[l].s[1];
     while (tr[r].s[0]) r = tr[r].s[0];
-    splay(root, l, 0), splay(root, r, l);
+    (root, l, 0), (root, r, l);
     tr[r].s[0] = 0;
     pushup(r), pushup(l);
     insert(root, y);
