@@ -56,7 +56,7 @@ void rotate(int x)
     pushup(y), pushup(x);
 }
 
-void splay(int x, int k)
+void splay(int x, int k) // spaly 操作，将x节点旋转到k节点之下
 {
     while (tr[x].p != k)
     {
@@ -69,7 +69,7 @@ void splay(int x, int k)
     if (!k) root = x;
 }
 
-int insert(int v)
+int insert(int v) // 将数据v插入，返回其编号
 {
     int u = root, p = 0;
     while (u) p = u, u = tr[u].s[v > tr[u].v];
@@ -80,7 +80,7 @@ int insert(int v)
     return u;
 }
 
-int get_k(int k)
+int get_k(int k) // 找到第k大的数据
 {
     int u = root;
     while (true)
@@ -93,7 +93,7 @@ int get_k(int k)
     return -1;
 }
 
-int get(int v)
+int get(int v) // 找到第一个大于等于v的数的编号
 {
     int u = root, res;
     while (u)

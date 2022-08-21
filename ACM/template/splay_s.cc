@@ -8,11 +8,12 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <list>
 #include <queue>
 #include <cmath>
 #include <unordered_map>
 #include <unordered_set>
-
+#include <string>
 
 using namespace std;
 
@@ -30,12 +31,12 @@ constexpr int N = 100010, INF = 1e9;
 int n, m;
 
 struct Node {
-    int s[2], p, v;//儿子,父节点,编号
-    int size, flag;//子树节点个数, 有没有翻转
+    int s[2], p, v;
+    int size, flag;
 
     void init(int _v, int _p) {
         v = _v, p = _p;
-        size = 1;
+        size = 1, flag = 0;
     }
 } tr[N];
 
@@ -56,7 +57,7 @@ void pushdown(int x) {
 
 void rotate(int x) {
     int y = tr[x].p, z = tr[y].p;
-    int k = tr[y].s[1] == x;  // k=0表示x是y的左儿子；k=1表示x是y的右儿子
+    int k = tr[y].s[1] == x;
     tr[z].s[tr[z].s[1] == y] = x, tr[x].p = z;
     tr[y].s[k] = tr[x].s[k ^ 1], tr[tr[x].s[k ^ 1]].p = y;
     tr[x].s[k ^ 1] = y, tr[y].p = x;
@@ -66,9 +67,10 @@ void rotate(int x) {
 void splay(int x, int k) {
     while (tr[x].p != k) {
         int y = tr[x].p, z = tr[y].p;
-        if (z != k)
+        if (z != k) {
             if ((tr[y].s[1] == x) ^ (tr[z].s[1] == y)) rotate(x);
             else rotate(y);
+        }
         rotate(x);
     }
     if (!k) root = x;
@@ -87,6 +89,7 @@ int insert(int v) {
 int get_k(int k) {
     int u = root;
     while (u) {
+        pushdown(u);
         if (tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
         else if (tr[tr[u].s[0]].size + 1 == k) return tr[u].v;
         else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
@@ -106,36 +109,36 @@ int get(int v) {
 void output(int u) {
     pushdown(u);
     if (tr[u].s[0]) output(tr[u].s[0]);
-    if (tr[u].v >= 1 && tr[u].v <= n) printf("%d ", tr[u].v);
+    if (tr[u].v >= 1 && tr[u].v <= n) cout << tr[u].v << " ";
     if (tr[u].s[1]) output(tr[u].s[1]);
 }
 
 int main() {
     fhj();
     cin >> n >> m;
-    auto L = insert(-INF), R = insert(INF);
-    string op;
-    int k;
-    int delta = 0, tot = 0;
+    int L = insert(-INF), R = insert(INF);
+    int delta = 0;
+    int tot = 0;
     while (n--) {
+        string op;
+        int k;
         cin >> op >> k;
         if (op == "I") {
-            if (k > m) k -= delta, insert(k), ++tot;
-        } else if (op == "A") {
-            delta += k;
-        } else if (op == "S") {
+            if (k >= m) k -= delta, insert(k), tot++;
+        } else if (op == "A") delta += k;
+        else if (op == "S") {
             delta -= k;
             R = get(m - delta);
             splay(R, 0), splay(L, R);
             tr[L].s[1] = 0;
             pushup(L), pushup(R);
         } else {
-            if (tr[root].size - 2 < k) cout << -1 << endl;
-            else {
-                cout << get_k(tr[root].size - k) + delta << endl;
-            }
+            if (tr[root].size - 2 < k) puts("-1");
+            else printf("%d\n", get_k(tr[root].size - k) + delta);
         }
     }
-    cout << tot - (tr[root].size - 2) << endl;
+
+    printf("%d\n", tot - (tr[root].size - 2));
+
     return 0;
 }
