@@ -60,6 +60,7 @@ void insert(int& root, int v)
     splay(root, u, 0);
 }
 
+// 在以root为根的树下小于v的数的个数
 int get_k(int root, int v)
 {
     int u = root, res = 0;
@@ -71,6 +72,8 @@ int get_k(int root, int v)
     return res;
 }
 
+// 将x点删除，y插入
+// 将x转到根节点，找到前继l和后继r，然后将l转到根，r转到l下再删除x
 void update(int& root, int x, int y)
 {
     int u = root;
@@ -118,6 +121,7 @@ void change(int u, int p, int x)
     else change(u << 1 | 1, p, x);
 }
 
+// 获得v的前继
 int get_pre(int root, int v)
 {
     int u = root, res = -INF;
