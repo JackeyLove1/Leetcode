@@ -1,3 +1,4 @@
+// 比精确覆盖问题少一重循环，多一层IDA*算法预估距离剪枝
 #include <iostream>
 #include <cstring>
 #include <algorithm>
@@ -31,6 +32,7 @@ void add(int& hh, int& tt, int x, int y)
     tt = idx ++ ;
 }
 
+// 启发式搜索函数
 int h()
 {
     int cnt = 0;
@@ -39,6 +41,7 @@ int h()
     {
         if (st[col[i]]) continue;
         cnt ++ ;
+        // 以下方法把这一列的行全部选上
         st[col[i]] = true;
         for (int j = d[i]; j != i; j = d[j])
             for (int k = r[j]; k != j; k = r[k])
