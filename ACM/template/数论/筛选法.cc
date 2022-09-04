@@ -18,6 +18,20 @@ int Eratosthenes(int n) {
 
 // 线性筛 Euler筛选法
 // C++ Version
+
+void get_primes(int n)
+{
+    for (int i = 2; i <= n; i ++ )
+    {
+        if (!st[i]) primes[cnt ++ ] = i;
+        for (int j = 0; primes[j] <= n / i; j ++ ) // primes[j] * i <= n
+        {
+            st[primes[j] * i] = true;
+            if (i % primes[j] == 0) break;
+        }
+    }
+}
+
 void init() {
   for (int i = 2; i < MAXN; ++i) {
     if (!vis[i]) {
