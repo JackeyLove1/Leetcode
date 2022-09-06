@@ -23,73 +23,36 @@ int exgcd(int a, int b, int &x, int &y){
     return d; // a和b的最大公因数，我们所需要的是x和y
 }
 
-/*
-int exgcd(int a, int b, int& x, int& y) {
-    if(a < b) return exgcd(b, a, y, x);
-    if(b == 0) {
-        x = 1; y = 0;
-        return a;
-    } else {
-        int x1;
-        int d = exgcd(b, a % b, x1, x);
-        y = x1 - a / b * x;
-        return d;
-    }
-}
+#include <iostream>
+#include <algorithm>
 
-int exgcd(int a, int b, int& x, int& y) {
-    if(a < b) return exgcd(b, a, y, x);
-    int m = 0, n = 1;
-    x = 1; y = 0;
-    while(b != 0) {
-        int d = a / b, t;
-        t = m; m = x - d * t; x = t;
-        t = n; n = y - d * t; y = t;
-        t = a % b; a = b; b = t;
-    }
-    return a;
-}
+using namespace std;
 
-*/
-
-// 中国剩余定理
-using LL = long long;
-const int N = 10;
-
-int n;
-int A[N], B[N];
-
-void exgcd(LL a, LL b, LL &x, LL &y)
+int exgcd(int a, int b, int &x, int &y)
 {
-    if (!b) x = 1, y = 0;
-    else
+    if (!b)
     {
-        exgcd(b, a % b, y, x);
-        y -= a / b * x;
+        x = 1, y = 0;
+        return a;
     }
+    int d = exgcd(b, a % b, y, x);
+    y -= a / b * x;
+    return d;
 }
 
 int main()
 {
+    int n;
     scanf("%d", &n);
 
-    LL M = 1;
-    for (int i = 0; i < n; i ++ )
+    while (n -- )
     {
-        scanf("%d%d", &A[i], &B[i]);
-        M *= A[i];
+        int a, b;
+        scanf("%d%d", &a, &b);
+        int x, y;
+        exgcd(a, b, x, y);
+        printf("%d %d\n", x, y);
     }
-
-    LL res = 0;
-    for (int i = 0; i < n; i ++ )
-    {
-        LL Mi = M / A[i];
-        LL ti, x;
-        exgcd(Mi, A[i], ti, x);
-        res += B[i] * Mi * ti;
-    }
-
-    cout << (res % M + M) % M << endl;
 
     return 0;
 }
