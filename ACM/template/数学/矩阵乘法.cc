@@ -11,6 +11,7 @@ const int N = 3;
 
 int n, m;
 
+// 向量a乘以矩阵b存储在c中
 void mul(int c[], int a[], int b[][N])
 {
     int temp[N] = {0};
@@ -21,6 +22,7 @@ void mul(int c[], int a[], int b[][N])
     memcpy(c, temp, sizeof temp);
 }
 
+// 矩阵a乘以矩阵b存储在c中
 void mul(int c[][N], int a[][N], int b[][N])
 {
     int temp[N][N] = {0};
@@ -44,6 +46,7 @@ int main()
     };
 
     n -- ;
+    // 快速乘法的翻版
     while (n)
     {
         if (n & 1) mul(f1, f1, a);  // res = res * a
