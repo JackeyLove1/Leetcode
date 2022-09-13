@@ -29,33 +29,38 @@ static inline void fhj() {
     cin.tie(nullptr), cout.tie(nullptr);
 }
 
-constexpr int N = 1e5 + 100;
-int n;
-ll a[N];
+constexpr int N = 1e3 + 100, INF = 0x3f3f3f3f, M = 26;
 
+inline int popcount(int x) {
+    return __builtin_popcount(x);
+}
+
+ll LCM(ll a, ll b){
+    return a / __gcd(a, b) * b;
+}
+
+ll n, a[N];
+int m;
 
 int main() {
     fhj();
-    cin >> n;
-    for (int i = 0; i < n; ++i) cin >> a[i];
-    int k = 0;
-    for (int i = 62; i >= 0; --i) {
-        for (int j = k; j < n; ++j) {
-            if ((a[j] >> i) & 1) {
-                swap(a[k], a[j]);
-                break;
+    int t;
+    cin >> t ;
+    while (t--){
+        cin >> n >> m;
+        for (int i = 0; i < m; ++i) cin >> a[i];
+        ll sum = 0, lcm = 1;
+        for (int i = 0; i < (1 << m); ++i){
+            for(int j = 0; j < m; ++j){
+                if (i & (1 << j)){
+                    lcm = LCM(lcm, a[j]);
+                }
             }
+            int cnt = popcount(i);
+            if (cnt & 1) sum += n / lcm;
+            else sum -= n / lcm;
         }
-        if (!((a[k] >> i) & 1)) continue;
-        for (int j = 0; j < n; ++j) {
-            if (j != k && ((a[j] >> i) & 1)) {
-                a[j] ^= a[k];
-            }
-        }
-        ++k;
+        cout << sum << endl;
     }
-    ll res = 0;
-    for (int i = 0; i < k; ++i) res ^= a[i];
-    cout << res << endl;
     return 0;
 }
