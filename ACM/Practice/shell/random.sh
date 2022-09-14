@@ -1,0 +1,1 @@
+echo "" | awk '{srand(); printf("%f", rand());}'
