@@ -7,6 +7,19 @@
 using namespace std;
 
 typedef long long LL;
+const int INF = 1e8;
+
+int exgcd(int a, int b, int& x, int& y)
+{
+    if (!b)
+    {
+        x = 1, y = 0;
+        return a;
+    }
+    int d = exgcd(b, a % b, y, x);
+    y -= a / b * x;
+    return d;
+}
 
 int bsgs(int a, int b, int p)
 {
@@ -20,13 +33,27 @@ int bsgs(int a, int b, int p)
     }
     int ak = 1;
     for (int i = 0; i < k; i ++ ) ak = (LL)ak * a % p;
-
     for (int i = 1, j = ak; i <= k; i ++ )
     {
-        if (hash.count(j)) return (LL)i * k - hash[j];
+        if (hash.count(j)) return i * k - hash[j];
         j = (LL)j * ak % p;
     }
-    return -1;
+    return -INF;
+}
+
+int exbsgs(int a, int b, int p)
+{
+    b = (b % p + p) % p;
+    if (1 % p == b % p) return 0;
+    int x, y;
+    int d = exgcd(a, p, x, y);
+    if (d > 1)
+    {
+        if (b % d) return -INF;
+        exgcd(a / d, p / d, x, y);
+        return exbsgs(a, (LL)b / d * x % (p / d), p / d) + 1;
+    }
+    return bsgs(a, b, p);
 }
 
 int main()
@@ -34,8 +61,8 @@ int main()
     int a, p, b;
     while (cin >> a >> p >> b, a || p || b)
     {
-        int res = bsgs(a, b, p);
-        if (res == -1) puts("No Solution");
+        int res = exbsgs(a, b, p);
+        if (res < 0) puts("No Solution");
         else cout << res << endl;
     }
     return 0;
@@ -80,4 +107,3 @@ ll exBSGS(ll a, ll b, ll m, ll k = 1)
 }
 
 */
-// 扩展BSGS算法
