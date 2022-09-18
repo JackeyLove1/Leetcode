@@ -18,7 +18,7 @@ int Eratosthenes(int n) {
 
 // 线性筛 Euler筛选法
 // C++ Version
-
+// problems?
 void get_primes(int n)
 {
     for (int i = 2; i <= n; i ++ )
@@ -31,7 +31,18 @@ void get_primes(int n)
         }
     }
 }
-
+/*
+// 获得n范围内所有质数
+inline void init(const int sz) {
+    for (int i = 2; i <= sz; i++) {
+        if (!st[i]) primes[cnt++] = i;
+        for (int j = 0; j <= cnt && i * primes[j] <= sz; ++j) {
+            st[i * primes[j]] = true;
+            if (i % primes[j] == 0) break;
+        }
+    }
+}
+*/
 void init() {
   for (int i = 2; i < MAXN; ++i) {
     if (!vis[i]) {
