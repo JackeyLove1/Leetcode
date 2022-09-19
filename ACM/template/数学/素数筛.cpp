@@ -13,6 +13,20 @@ inline void get_prime(int sz) {
     }
 }
 
+// 筛选范围内最大的素因子
+
+inline void get_primes(const int n){
+    memset(primes,0,sizeof(primes));
+    primes[1]=1;
+    for(int i=2;i<n;i++)//筛选所有范围内的最大素数因子
+    {
+    	if(primes[i]==0){
+            for(int j=i;j<n;j+=i){
+    		primes[j]=i;
+		    }   
+        }
+	}
+}
 
 
 // 埃式筛
