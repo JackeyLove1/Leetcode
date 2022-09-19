@@ -8,7 +8,6 @@
 #include <set>
 #include <cmath>
 #include <numeric>
-#include <array>
 
 using namespace std;
 
@@ -26,7 +25,7 @@ static inline void fhj() {
 }
 
 #define MAXN 9999
-#define MAXSIZE 40100
+#define MAXSIZE 1010
 #define DLEN 4
 
 class BigNum {
@@ -38,11 +37,9 @@ public:
         len = 1;
         memset(a, 0, sizeof(a));
     }  //构造函数
-
     BigNum(const int);     //将一个int类型的变量转化成大数
     BigNum(const char *);   //将一个字符串类型的变量转化为大数
     BigNum(const BigNum &); //拷贝构造函数
-
     BigNum &operator=(const BigNum &); //重载赋值运算符，大数之间进行赋值运算
     friend istream &operator>>(istream &, BigNum &); //重载输入运算符
     friend ostream &operator<<(ostream &, BigNum &); //重载输出运算符
@@ -51,12 +48,6 @@ public:
     BigNum operator-(const BigNum &) const;  //重载减法运算符，两个大数之间的相减运算
     BigNum operator*(const BigNum &) const;  //重载乘法运算符，两个大数之间的相乘运算
     BigNum operator/(const int &) const;     //重载除法运算符，大数对一个整数进行相除运算
-
-    BigNum &operator+=(BigNum &);
-
-    BigNum &operator-=(BigNum &);
-
-    BigNum &operator*=(BigNum &);
 
     BigNum operator^(const int &) const;     //大数的n次方运算
     int operator%(const int &) const;        //大数对一个int类型的变量进行取模运算
@@ -104,15 +95,19 @@ BigNum::BigNum(const char *s)  //将一个字符串类型的变量转化为大�
 
 BigNum::BigNum(const BigNum &T) : len(T.len)  //拷贝构造函数
 {
+    int i;
     memset(a, 0, sizeof(a));
-    memcpy(a, T.a, sizeof T.a);
+    for (i = 0; i < len; i++)
+        a[i] = T.a[i];
 }
 
-BigNum &BigNum::operator=(const BigNum &T)  //重载赋值运算符，大数之间赋值运算
+BigNum &BigNum::operator=(const BigNum &n)  //重载赋值运算符，大数之间赋值运算
 {
-    len = T.len;
+    int i;
+    len = n.len;
     memset(a, 0, sizeof(a));
-    memcpy(a, T.a, sizeof T.a);
+    for (i = 0; i < len; i++)
+        a[i] = n.a[i];
     return *this;
 }
 
@@ -297,29 +292,18 @@ void BigNum::print()   //输出大数
     printf("\n");
 }
 
-BigNum &BigNum::operator*=(BigNum &rhs) {
-    this->operator*(rhs);
-    return *this;
-}
-
-BigNum &BigNum::operator+=(BigNum &rhs) {
-    this->operator+(rhs);
-    return *this;
-}
-
-BigNum &BigNum::operator-=(BigNum &rhs) {
-    this->operator-(rhs);
-    return *this;
-}
-
 int main() {
-    int n;
-    while (~scanf("%d", &n) && n) {
-        BigNum res{1};
-        for (int i = 1; i <= n; ++i) {
-            res = res * BigNum{i};
+    fhj();
+    auto f1 = BigNum(1);
+    auto f2 = BigNum(1);
+    while (true) {
+        auto f3 = f1 + f2;
+        if (f3.size() >= 1000) {
+            f3.print();
+            break;
         }
-        res.print();
+        f1 = f2;
+        f2 = f3;
     }
     return 0;
 }
