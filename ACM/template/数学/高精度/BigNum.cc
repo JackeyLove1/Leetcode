@@ -26,7 +26,7 @@ static inline void fhj() {
 }
 
 #define MAXN 9999
-#define MAXSIZE 40100
+#define MAXSIZE 510
 #define DLEN 4
 
 class BigNum {
@@ -50,6 +50,8 @@ public:
     BigNum operator+(const BigNum &) const;  //重载加法运算符，两个大数之间的相加运算
     BigNum operator-(const BigNum &) const;  //重载减法运算符，两个大数之间的相减运算
     BigNum operator*(const BigNum &) const;  //重载乘法运算符，两个大数之间的相乘运算
+    BigNum operator*(int) const;
+
     BigNum operator/(const int &) const;     //重载除法运算符，大数对一个整数进行相除运算
 
     BigNum &operator+=(BigNum &);
@@ -225,6 +227,10 @@ BigNum BigNum::operator*(const BigNum &T) const  //两个大数之间的相乘
     return ret;
 }
 
+BigNum BigNum::operator*(int num) const {
+    return this->operator*(BigNum{num});
+}
+
 BigNum BigNum::operator/(const int &b) const  //大数对一个整数进行相除运算
 {
     BigNum ret;
@@ -314,12 +320,12 @@ BigNum &BigNum::operator-=(BigNum &rhs) {
 
 int main() {
     int n;
-    while (~scanf("%d", &n) && n) {
-        BigNum res{1};
-        for (int i = 1; i <= n; ++i) {
-            res = res * BigNum{i};
-        }
-        res.print();
+    BigNum f[101];
+    f[0] = 1;
+    cin >> n;
+    for (int i = 1; i <= 100; i++) f[i] = f[i - 1] * (4 * i - 2) / (i + 1);
+    while (~scanf("%d", &n) && n){
+        f[n].print();
     }
     return 0;
 }
