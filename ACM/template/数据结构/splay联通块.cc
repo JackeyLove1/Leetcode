@@ -13,7 +13,7 @@
 #include <cmath>
 #include <unordered_map>
 #include <unordered_set>
-#include <string>
+
 
 using namespace std;
 
@@ -26,21 +26,27 @@ using ull = unsigned long long;
 using ll = long long;
 using PII = pair<int, int>;
 
-constexpr int N = 100010, INF = 1e9;
+constexpr int N = 1800010, INF = 1e9;
 
 int n, m;
 
 struct Node {
-    int s[2], p, v;
+    int s[2], p, v, id;
     int size, flag;
 
-    void init(int _v, int _p) {
-        v = _v, p = _p;
+    void init(int _v, int _id, int _p) {
+        v = _v, id = _id, p = _p;
         size = 1, flag = 0;
     }
 } tr[N];
 
-int root, idx;
+int root[N], idx;
+int p[N];
+
+int find(int x) {
+    if (p[x] != x) return p[x] = find(p[x]);
+    return x;
+}
 
 void pushup(int x) {
     tr[x].size = tr[tr[x].s[0]].size + tr[tr[x].s[1]].size + 1;
@@ -64,7 +70,8 @@ void rotate(int x) {
     pushup(y), pushup(x);
 }
 
-void splay(int x, int k) {
+// b代表第b个联通块
+void splay(int x, int k, int b) {
     while (tr[x].p != k) {
         int y = tr[x].p, z = tr[y].p;
         if (z != k) {
@@ -73,32 +80,32 @@ void splay(int x, int k) {
         }
         rotate(x);
     }
-    if (!k) root = x;
+    if (!k) root[b] = x;
 }
 
-int insert(int v) {
-    int u = root, p = 0;
+int insert(int v, int id, int b) {
+    int u = root[b], p = 0;
     while (u) p = u, u = tr[u].s[v > tr[u].v];
     u = ++idx;
     if (p) tr[p].s[v > tr[p].v] = u;
-    tr[u].init(v, p);
-    splay(u, 0);
+    tr[u].init(v, id, p);
+    splay(u, 0, b);
     return u;
 }
 
-int get_k(int k) {
-    int u = root;
+int get_k(int k, int b) {
+    int u = root[b];
     while (u) {
         pushdown(u);
         if (tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
-        else if (tr[tr[u].s[0]].size + 1 == k) return tr[u].v;
+        else if (tr[tr[u].s[0]].size + 1 == k) return tr[u].id;
         else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
     }
     return -1;
 }
 
-int get(int v) {
-    int u = root, res;
+int get(int v, int b) {
+    int u = root[b], res;
     while (u) {
         if (tr[u].v >= v) res = u, u = tr[u].s[0];
         else u = tr[u].s[1];
@@ -106,61 +113,68 @@ int get(int v) {
     return res;
 }
 
-void output(int u) {
+void output(int b) {
+    int u = root[b];
     pushdown(u);
     if (tr[u].s[0]) output(tr[u].s[0]);
     if (tr[u].v >= 1 && tr[u].v <= n) cout << tr[u].v << " ";
     if (tr[u].s[1]) output(tr[u].s[1]);
 }
 
-// get k-th value's pos
-int get_k_pos(int k){
-    int u = root;
-    while (u){
-        pushdown(u);
-        if(tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
-        else if (tr[tr[u].s[0]].size + 1 == k) return u;
-        else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
+void dfs(int u, int b) {
+    if (tr[u].s[0]) dfs(tr[u].s[0], b);
+    if (tr[u].s[1]) dfs(tr[u].s[1], b);
+    insert(tr[u].v, tr[u].id, b);
+}
+
+int main()
+{
+    scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i ++ )
+    {
+        p[i] = root[i] = i;
+        int v;
+        scanf("%d", &v);
+        tr[i].init(v, i, 0);
     }
-    return -1;
-}
+    idx = n;
 
-// 翻转[l, r]之间的区间
-// 获得l的前驱节点l0和r的后继节点r0
-// 然后将l0挂载到0下，将r0挂载到l0下，最后将rev翻转即可
-void splay_reverse(int l, int r) {
-    auto l0 = get_k_pos(l - 1), r0 = get_k_pos(r + 1);
-    splay(l0, 0), splay(r0, l0);
-    tr[tr[r0].s[0]].rev ^= 1;
-}
-
-
-int main() {
-    fhj();
-    cin >> n >> m;
-    int L = insert(-INF), R = insert(INF);
-    int delta = 0;
-    int tot = 0;
-    while (n--) {
-        string op;
-        int k;
-        cin >> op >> k;
-        if (op == "I") {
-            if (k >= m) k -= delta, insert(k), tot++;
-        } else if (op == "A") delta += k;
-        else if (op == "S") {
-            delta -= k;
-            R = get(m - delta);
-            splay(R, 0), splay(L, R);
-            tr[L].s[1] = 0;
-            pushup(L), pushup(R);
-        } else {
-            if (tr[root].size - 2 < k) puts("-1");
-            else printf("%d\n", get_k(tr[root].size - k) + delta);
+    while (m -- )
+    {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        a = find(a), b = find(b);
+        if (a != b)
+        {
+            if (tr[root[a]].size > tr[root[b]].size) swap(a, b);
+            dfs(root[a], b);
+            p[a] = b;
         }
     }
 
-    printf("%d\n", tot - (tr[root].size - 2));
+    scanf("%d", &m);
+    while (m -- )
+    {
+        char op[2];
+        int a, b;
+        scanf("%s%d%d", op, &a, &b);
+        if (*op == 'B')
+        {
+            a = find(a), b = find(b);
+            if (a != b)
+            {
+                if (tr[root[a]].size > tr[root[b]].size) swap(a, b);
+                dfs(root[a], b);
+                p[a] = b;
+            }
+        }
+        else
+        {
+            a = find(a);
+            if (tr[root[a]].size < b) puts("-1");
+            else printf("%d\n", get_k(b, a));
+        }
+    }
 
     return 0;
 }

@@ -1,42 +1,38 @@
 #include <cstdio>
-#include <cstring>
 #include <cstdlib>
+#include <vector>
+#include <string>
+#include <cstring>
 #include <iostream>
 #include <algorithm>
-#include <functional>
-#include <numeric>
-#include <vector>
-#include <map>
 #include <set>
-#include <list>
-#include <queue>
 #include <cmath>
-#include <unordered_map>
-#include <unordered_set>
-#include <string>
+#include <numeric>
+#include <array>
+
 
 using namespace std;
+
+using ll = long long;
+using PII = pair<int, int>;
+
 
 static inline void fhj() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
 }
 
-using ull = unsigned long long;
-using ll = long long;
-using PII = pair<int, int>;
-
-constexpr int N = 100010, INF = 1e9;
+constexpr int N = 500010, M = 65, INF = 0x3f3f3f3f;
 
 int n, m;
 
 struct Node {
     int s[2], p, v;
-    int size, flag;
+    int size, rev;
 
     void init(int _v, int _p) {
         v = _v, p = _p;
-        size = 1, flag = 0;
+        size = 1, rev = 0;
     }
 } tr[N];
 
@@ -47,11 +43,11 @@ void pushup(int x) {
 }
 
 void pushdown(int x) {
-    if (tr[x].flag) {
+    if (tr[x].rev) {
         swap(tr[x].s[0], tr[x].s[1]);
-        tr[tr[x].s[0]].flag ^= 1;
-        tr[tr[x].s[1]].flag ^= 1;
-        tr[x].flag = 0;
+        tr[tr[x].s[0]].rev ^= 1;
+        tr[tr[x].s[1]].rev ^= 1;
+        tr[x].rev = 0;
     }
 }
 
@@ -86,6 +82,19 @@ int insert(int v) {
     return u;
 }
 
+// get k-th value's pos
+int get_k_pos(int k){
+    int u = root;
+    while (u){
+        pushdown(u);
+        if(tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
+        else if (tr[tr[u].s[0]].size + 1 == k) return u;
+        else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
+    }
+    return -1;
+}
+
+// get k-th value
 int get_k(int k) {
     int u = root;
     while (u) {
@@ -113,18 +122,6 @@ void output(int u) {
     if (tr[u].s[1]) output(tr[u].s[1]);
 }
 
-// get k-th value's pos
-int get_k_pos(int k){
-    int u = root;
-    while (u){
-        pushdown(u);
-        if(tr[tr[u].s[0]].size >= k) u = tr[u].s[0];
-        else if (tr[tr[u].s[0]].size + 1 == k) return u;
-        else k -= tr[tr[u].s[0]].size + 1, u = tr[u].s[1];
-    }
-    return -1;
-}
-
 // 翻转[l, r]之间的区间
 // 获得l的前驱节点l0和r的后继节点r0
 // 然后将l0挂载到0下，将r0挂载到l0下，最后将rev翻转即可
@@ -134,33 +131,20 @@ void splay_reverse(int l, int r) {
     tr[tr[r0].s[0]].rev ^= 1;
 }
 
+inline void solve() {
+    cin >> n >> m;
+    for (int i = 0; i <= n + 1; ++i) insert(i);
+    int l, r;
+    while (m--) {
+        cin >> l >> r; // 由于又一个0的存在，需要l++,r++
+        ++l, ++r;
+        splay_reverse(l, r);
+    }
+    output(root);
+}
 
 int main() {
     fhj();
-    cin >> n >> m;
-    int L = insert(-INF), R = insert(INF);
-    int delta = 0;
-    int tot = 0;
-    while (n--) {
-        string op;
-        int k;
-        cin >> op >> k;
-        if (op == "I") {
-            if (k >= m) k -= delta, insert(k), tot++;
-        } else if (op == "A") delta += k;
-        else if (op == "S") {
-            delta -= k;
-            R = get(m - delta);
-            splay(R, 0), splay(L, R);
-            tr[L].s[1] = 0;
-            pushup(L), pushup(R);
-        } else {
-            if (tr[root].size - 2 < k) puts("-1");
-            else printf("%d\n", get_k(tr[root].size - k) + delta);
-        }
-    }
-
-    printf("%d\n", tot - (tr[root].size - 2));
-
+    solve();
     return 0;
 }
