@@ -39,3 +39,28 @@ int main()
 
     return 0;
 }
+
+/*
+// string
+ull h[N][N], p[N];
+string str[N];
+constexpr ull P = 131;
+
+inline ull get(int idx, int l, int r) {
+    return h[idx][r + 1] - h[idx][l] * p[r - l + 1];
+}
+
+inline void init() {
+    p[0] = 1;
+    for (int i = 1; i < N; ++i) {
+        p[i] = p[i - 1] * P;
+    }
+}
+
+inline void str_hash(int idx) {
+    const auto &s = str[idx];
+    for (int i = 1; i <= s.size(); i++) {
+        h[idx][i] = h[idx][i - 1] * P + s[i - 1];
+    }
+}
+*/

@@ -8,7 +8,6 @@
 #include <set>
 #include <cmath>
 #include <numeric>
-// #include <array>
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
@@ -25,7 +24,7 @@ static inline void fhj() {
     cin.tie(nullptr), cout.tie(nullptr);
 }
 
-constexpr int N = 1100, M = 65, INF = 0x3f3f3f3f, MOD = 1e4;
+constexpr int N = 1001, M = 65, INF = 0x3f3f3f3f, MOD = 1e4;
 int g[N][N];
 bool st[N][N];
 int n, m;
