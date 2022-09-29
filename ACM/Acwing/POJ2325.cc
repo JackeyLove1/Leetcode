@@ -8,22 +8,25 @@
 #include <set>
 #include <cmath>
 #include <numeric>
-#include <array>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+#include <functional>
+#include <tuple>
 
 using namespace std;
 
 using ll = long long;
+using ull = unsigned long long;
 using PII = pair<int, int>;
 
-const int N = 1e6 + 10, M = 1250;
-int primes[N];
-bool st[N];
-int cnt;
 
 static inline void fhj() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
 }
+
+constexpr int N = 1000 + 100, M = 65, INF = 0x3f3f3f3f, MOD = 1e4;
 
 #define MAXN 1100
 #define MAXSIZE 510
@@ -64,10 +67,14 @@ public:
     int operator%(const int &) const;        //大数对一个int类型的变量进行取模运算
     bool operator>(const BigNum &T) const;   //大数和另一个大数的大小比较
     bool operator>(const int &t) const;      //大数和一个int类型的变量的大小比较
-    bool operator == (const int& t) const;
-    bool operator == (const BigNum& T) const;
-    bool operator != (const int t) const;
-    bool operator != (const BigNum& T) const; 
+    bool operator==(const int &t) const;
+
+    bool operator==(const BigNum &T) const;
+
+    bool operator!=(const int t) const;
+
+    bool operator!=(const BigNum &T) const;
+
     void print();        //输出大数
     int size() const;
 };
@@ -309,10 +316,10 @@ bool BigNum::operator==(const BigNum &T) const {
         ln = len - 1;
         while (a[ln] == T.a[ln] && ln >= 0)
             ln--;
-        if (ln > 0)
-            return false;
-        else
+        if (ln == -1)
             return true;
+        else
+            return false;
     }
 }
 
@@ -324,7 +331,6 @@ bool BigNum::operator!=(const int t) const {
 bool BigNum::operator!=(const BigNum &T) const {
     return !(*this == T);
 }
-
 
 void BigNum::print()   //输出大数
 {
@@ -350,14 +356,43 @@ BigNum &BigNum::operator-=(BigNum &rhs) {
     return *this;
 }
 
+char str[1100];
+
 int main() {
-    int n;
-    BigNum f[101];
-    f[0] = 1;
-    cin >> n;
-    for (int i = 1; i <= 100; i++) f[i] = f[i - 1] * (4 * i - 2) / (i + 1);
-    while (~scanf("%d", &n) && n){
-        f[n].print();
+    while (~scanf("%s", str)) {
+        BigNum n{str};
+        // cout << n << endl;
+        if (n == -1) break;
+        if (n == 0) {
+            cout << "10" << endl;
+            continue;
+        }
+        if (n == 1) {
+            cout << "11" << endl;
+            continue;
+        }
+        string res = "";
+        string nums{"0123456789"};
+        for (int i = 9; i > 1; --i) {
+            while (n % i == 0) {
+                // cout << "n: " << n << " i: " << i << endl;
+                n = n / i;
+                // cout << "n: " << n << " i: " << i << endl;
+                res.push_back(nums[i]);
+            }
+        }
+        if (n > 1 || res.size() == 0) {
+            cout << "There is no such number.\n";
+            continue;
+        }
+        if (res.size() == 1) {
+            res.push_back(nums[1]);
+        }
+        // reverse(nums.begin(), nums.end());
+        for (auto it = res.rbegin(); it != res.rend(); ++it) {
+            cout << *it;
+        }
+        cout << endl;
     }
     return 0;
 }
