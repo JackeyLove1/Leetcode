@@ -230,63 +230,75 @@ ll solve(ll x) {
 }
 
 // 考虑前导零版本
-LL dfs(int pos, int pre, int len, bool leadingzero, bool limit){//pos--当前位，pre--更高一位的数是奇还是偶，len--连续长度，leadingzero--是否有前导零，limit--当前位的数字是否有限制
-    if(!pos) return (pre & 1) != (len & 1);
-    if(!limit && dp[pos][pre][len] != -1) return dp[pos][pre][len];
-    LL ans = 0;
-    int up = limit ? digit[pos] : 9;
-    for(int i = 0; i <= up; ++i){
-        if(leadingzero){
-            if(i == 0){
-                ans += dfs(pos - 1, 0, 0, true, limit && i == up);
-            }
-            else{
-                ans += dfs(pos - 1, i & 1, 1, false, limit && i == up);
-            }
-        }
-        else{
-            if(i & 1){
-                if(pre & 1){
-                    ans += dfs(pos - 1, i & 1, len + 1, false, limit && i == up);
-                }
-                else{
-                    if(len & 1){//若当前位是奇数，前一位是偶数，且已经有奇数长度的偶数，则可以继续延伸
-                        ans += dfs(pos - 1, i & 1, 1, false, limit && i == up);
-                    }
-                }
-            }
-            else{
-                if(pre & 1){
-                    if(!(len & 1)){
-                        ans += dfs(pos - 1, i & 1, 1, false, limit && i == up);
-                    }
-                }
-                else{
-                    ans += dfs(pos - 1, i & 1, len + 1, false, limit && i == up);
-                }
-            }
-        }
+int a[15], len;
+ll dp[15][15];//pos, pre,
+
+ll dfs(int pos, int pre, bool lead, bool limit) {
+    if (pos > len) return 1;
+    if (!limit && dp[pos][pre] != -1) return dp[pos][pre];
+    ll ret = 0;
+    int up = limit ? a[len - pos + 1] : 9;//当前位最大数字
+    for (int i = 0; i <= up; i++)//从0枚举到最大数字
+    {
+        if (abs(i - pre) < 2) continue;
+        if (lead && i == 0) ret += dfs(pos + 1, -2, 1, limit && i == up);
+        else ret += dfs(pos + 1, i, 0, limit && i == up);
     }
-    if(!limit) dp[pos][pre][len] = ans;
-    return ans;
+    if (!limit && !lead) dp[pos][pre] = ret;
+    return ret;
 }
-LL solve(LL x){
-    int cnt = 0;
-    while(x){
-        digit[++cnt] = x % 10;
+
+ll solve(ll x) {
+    len = 0;
+    while (x) {
+        a[++len] = x % 10;
         x /= 10;
     }
-    return dfs(cnt, 0, 0, true, true);
-}
-int main(){
-    int T;
-    scanf("%d", &T);
-    int kase = 0;
     memset(dp, -1, sizeof dp);
-    while(T--){
-        LL L, R;
-        scanf("%lld%lld", &L, &R);
-        printf("Case #%d: %lld\n", ++kase, solve(R) - solve(L - 1));
+    return dfs(1, -2, true, true);
+}
+
+ll l, r;
+
+int main() {
+    cin >> l >> r;
+    cout << solve(r) - solve(l - 1) << endl;
+    return 0;
+}
+
+// fhj lead && limit 
+int a[60];
+ll dp[60][60]; // pos, count
+
+ll dfs(int pos, int cnt, bool limit) {
+    if (pos == 0) return std::max(cnt, 1);
+    auto &ret = dp[pos][cnt];
+    if (!limit && ret != -1) return ret;
+    int up = limit ? a[pos] : 1;
+    ll ans = 1;
+    for (int i = 0; i <= up; i++) {
+        ans = (ans * (dfs(pos - 1, cnt + (i == 1), limit && i == up) % MOD)) % MOD;
+        // cout << "pos: " << pos << " cnt: " << cnt << " up: " << up << " i: " << i << " ans: " << ans << endl;
+    }
+    if (!limit) ret = ans;
+    return ans;
+}
+
+ll solve(ll x) {
+    int pos = 0;
+    while (x) {
+        a[++pos] = x % 2;
+        x /= 2;
+    }
+    return dfs(pos, 0, 1);
+}
+
+int main() {
+    ll l;
+    memset(dp, -1, sizeof dp);
+    while (cin >> l && l) {
+        cout << solve(l) << endl;
     }
     return 0;
 }
+
