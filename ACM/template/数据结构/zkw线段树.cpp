@@ -26,8 +26,13 @@ int nums[N], lazy[N];
 inline void build(int n) {
 //  维护这么多信息都只需要这么几行，可见维护信息单一时代码应该会短的不像话（压行过的话大概三四行）
     for (; p <= n; p <<= 1); // 求解m -> 使得2^m > n的最小的m
+    /*
     for (int i = p + 1; i <= p + n; ++i) {
         tr[i] = nums[i - p];
+    }
+    */
+    for (int i = 1; i <= n; ++i){
+        tr[i + p] = nums[i];
     }
 }
 
@@ -47,6 +52,36 @@ inline void add(int l, int r, int d) {//区间修改
     }
     for (l >>= 1; l > 0; l >>= 1)tr[l] = max(tr[l << 1], tr[l << 1 | 1]) + lazy[l];//最后更新到根
 }
+/*
+// 观察上图发现，不断上移的过程，就是不断把端点及其兄弟排除出查询区间的过程。
+// 而如果查询区间的左端点是父节点的左儿子 / 右端点是父节点的右儿子，说明它的兄弟应当是答案的一部分。
+// 最后在查询的区间为空区间（两端点为兄弟节点）时，退出循环。
+int query(int l, int r)
+{
+    int ans = 0;
+    for (l += N - 1, r += N + 1; l ^ r ^ 1; l >>= 1, r >>= 1)
+    {
+        if (~l & 1) ans += tree[l ^ 1]; // 左端点是左儿子
+        if (r & 1) ans += tree[r ^ 1]; // 右端点是右儿子
+    }
+    return ans;
+}
+
+inline int Sum(int l,int r) {
+    int ans = 0;
+    // l=l+M-1->将查询区间改为L-1，r=r+M+1->将查询区间改为R+1
+    // l^r^1 -> 相当于判断l与r是否是兄弟节点
+    for(l=l+M-1,r=r+M+1;l^r^1;l>>=1,r>>=1) {
+        if(~l&1) // l % 2 == 0 即l是l/2的左儿子
+            ans += tree[l^1];
+        if(r&1) // r % 2 == 1 即r是r/2的右儿子
+            ans += tree[r^1];
+    }
+    return ans;
+}
+
+
+*/
 
 inline int sch(int l, int r) {//区间查询最大值
     int resl = 0, resr = 0;//左右两边分别记录，因为两边各自遇到的懒标记不一样

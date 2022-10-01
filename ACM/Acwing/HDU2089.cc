@@ -64,3 +64,25 @@ int main() {
         printf("%lld\n", solve(r) - solve(l - 1));
     }
 }
+
+//
+ll a,b;
+ll f[20][12][2][2];
+// len pre lim zero 
+ll s[20];
+
+ll dfs(ll len,ll pre,bool lim,bool zero)
+{
+	ll &tmp=f[len][pre][lim][zero];
+	if(~tmp) return tmp;
+	if(!len) return tmp=1;
+	tmp=0;
+	ll maxx=lim?s[len]:9;//卡最高位
+	ll minn=zero?1:0;//卡前导零
+	for(ll i=minn;i<=maxx;i++)
+	{
+		if(abs(i-pre)<2) continue;
+		tmp+=dfs(len-1,i,lim&&(i==maxx),0);
+	}
+	return tmp;
+}
