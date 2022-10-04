@@ -31,10 +31,14 @@ int n, m, p;
 
 struct Node {
     int l, r, d;
+    friend ostream& operator << (ostream& os, const Node& node) {
+        os << "l: " << node.l <<" r: " << node.r <<" d: " <<node.d << endl;
+        return os;
+    }
 } tr[N * 4];
 
 int w[N];
-static unordered_map<int, int> cnt;
+static unordered_map<int, ull> cnt;
 
 inline ll gcd(ll a, ll b) {
     return b == 0 ? a : gcd(b, a % b);
@@ -59,10 +63,13 @@ void build(int u, int l, int r) {
     if (l == r) {
         tr[u] = {l, r, w[l]};
         ++cnt[w[l]];
+        // cout << tr[u];
     } else {
+        tr[u] = {l, r};
         int mid = l + r >> 1;
         build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
         pushup(u);
+        // cout << tr[u];
     }
 }
 
@@ -93,17 +100,19 @@ int main() {
     fhj();
     int T;
     cin >> T;
-    while (T--) {
-        cin >> n >> m;
+    for (int t = 1; t <= T; ++t) {
         cnt.clear();
         memset(w, 0, sizeof w);
+        cout << "Case #" << t << ":" << endl;
+        cin >> n;
         for (int i = 1; i <= n; ++i) cin >> w[i];
         build(1, 1, n);
         int l, r;
+        cin >> m;
         while (m--) {
             cin >> l >> r;
-            auto d = query(1, l, r).d;
-            cout << d << " " << cnt[d] << endl;
+            auto node = query(1, l, r);
+            cout << node.d << " " << cnt[node.d] << endl;
         }
     }
     return 0;
