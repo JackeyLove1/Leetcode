@@ -1,3 +1,4 @@
+// x为大数，k为普通数
 using ll = long long;
 char s[999];
 int m;
@@ -23,3 +24,6 @@ int big_mod(const char *s, int mod) {
     return q;
 }
 */
+
+//  x和y均为大数
+// todo
