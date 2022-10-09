@@ -1,142 +1,111 @@
-#include <bits/stdc++.h>
+#include<cmath>
+#include<ctime>
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<iostream>
+#include<algorithm>
+#include<iomanip>
+#include<vector>
+#include<string>
+#include<bitset>
+#include<queue>
+#include<map>
+#include<set>
+
 using namespace std;
 
-const int maxn = 1 << 20, mod = 998244353;
-
-int a[maxn], b[maxn], g[maxn], gg[maxn];
-
-int qpow(int x, int y) {  // 快速幂
-  int ans = 1;
-
-  while (y) {
-    if (y & 1) {
-      ans = (long long)1 * ans * x % mod;
+inline int read() {
+    int x = 0, f = 1;
+    char ch = getchar();
+    while (ch < '0' || ch > '9') {
+        if (ch == '-')f = -1;
+        ch = getchar();
     }
-    x = (long long)1 * x * x % mod;
-    y >>= 1;
-  }
-  return ans;
+    while (ch <= '9' && ch >= '0') {
+        x = 10 * x + ch - '0';
+        ch = getchar();
+    }
+    return x * f;
 }
 
-int inv2 = qpow(2, mod - 2);  // 逆元
-
-inline void change(int *f, int len) {
-  for (int i = 1, j = len / 2; i < len - 1; i++) {
-    if (i < j) {
-      swap(f[i], f[j]);
-    }
-
-    int k = len / 2;
-    while (j >= k) {
-      j -= k;
-      k /= 2;
-    }
-    if (j < k) {
-      j += k;
-    }
-  }
+void print(int x) {
+    if (x < 0)putchar('-'), x = -x;
+    if (x >= 10)print(x / 10);
+    putchar(x % 10 + '0');
 }
 
-inline void NTT(int *f, int len, int type) {  // NTT
-  change(f, len);
+const int N = 300100, P = 998244353;
 
-  for (int q = 2; q <= len; q <<= 1) {
-    int nxt = qpow(3, (mod - 1) / q);
-    for (int i = 0; i < len; i += q) {
-      int w = 1;
-
-      for (int k = i; k < i + (q >> 1); k++) {
-        int x = f[k];
-        int y = (long long)1 * w * f[k + (q / 2)] % mod;
-
-        f[k] = (x + y) % mod;
-        f[k + (q / 2)] = (x - y + mod) % mod;
-        w = (long long)1 * w * nxt % mod;
-      }
+inline int qpow(int x, int y) {
+    int res(1);
+    while (y) {
+        if (y & 1) res = 1ll * res * x % P;
+        x = 1ll * x * x % P;
+        y >>= 1;
     }
-  }
+    return res;
+}
 
-  if (type == -1) {
-    reverse(f + 1, f + len);
-    int iv = qpow(len, mod - 2);
+int r[N];
 
-    for (int i = 0; i < len; i++) {
-      f[i] = (long long)1 * f[i] * iv % mod;
+void ntt(int *x, int lim, int opt) {
+    register int i, j, k, m, gn, g, tmp;
+    for (i = 0; i < lim; ++i)
+        if (r[i] < i)
+            swap(x[i], x[r[i]]);
+    for (m = 2; m <= lim; m <<= 1) {
+        k = m >> 1;
+        gn = qpow(3, (P - 1) / m);
+        for (i = 0; i < lim; i += m) {
+            g = 1;
+            for (j = 0; j < k; ++j, g = 1ll * g * gn % P) {
+                tmp = 1ll * x[i + j + k] * g % P;
+                x[i + j + k] = (x[i + j] - tmp + P) % P;
+                x[i + j] = (x[i + j] + tmp) % P;
+            }
+        }
     }
-  }
+    if (opt == -1) {
+        reverse(x + 1, x + lim);
+        register int inv = qpow(lim, P - 2);
+        for (i = 0; i < lim; ++i)
+            x[i] = 1ll * x[i] * inv % P;
+    }
 }
 
-inline void inv(int deg, int *f, int *h) {  // 求逆元
-  if (deg == 1) {
-    h[0] = qpow(f[0], mod - 2);
-    return;
-  }
+int A[N], B[N], C[N];
 
-  inv(deg + 1 >> 1, f, h);
-
-  int len = 1;
-  while (len < deg * 2) {  // 倍增
-    len *= 2;
-  }
-
-  copy(f, f + deg, gg);
-  fill(gg + deg, gg + len, 0);
-
-  NTT(gg, len, 1);
-  NTT(h, len, 1);
-  for (int i = 0; i < len; i++) {
-    h[i] = (long long)1 * (2 - (long long)1 * gg[i] * h[i] % mod + mod) % mod *
-           h[i] % mod;
-  }
-
-  NTT(h, len, -1);
-  fill(h + deg, h + len, 0);
-}
-
-int n, t[maxn];
-
-// deg:次数
-// f:被开根数组
-// h:答案数组
-inline void sqrt(int deg, int *f, int *h) {
-  if (deg == 1) {
-    h[0] = 1;
-    return;
-  }
-
-  sqrt(deg + 1 >> 1, f, h);
-
-  int len = 1;
-  while (len < deg * 2) {  // 倍增
-    len *= 2;
-  }
-  fill(g, g + len, 0);
-  inv(deg, h, g);
-  copy(f, f + deg, t);
-  fill(t + deg, t + len, 0);
-  NTT(t, len, 1);
-  NTT(g, len, 1);
-  NTT(h, len, 1);
-
-  for (int i = 0; i < len; i++) {
-    h[i] = (long long)1 * inv2 *
-           ((long long)1 * h[i] % mod + (long long)1 * g[i] * t[i] % mod) % mod;
-  }
-  NTT(h, len, -1);
-  fill(h + deg, h + len, 0);
-}
+char a[N], b[N];
 
 int main() {
-  cin >> n;
-
-  for (int i = 0; i < n; i++) {
-    scanf("%d", &a[i]);
-  }
-  sqrt(n, a, b);
-
-  for (int i = 0; i < n; i++) {
-    printf("%d ", b[i]);
-  }
-
-  return 0;
+    register int i, lim(1), n;
+    scanf("%s", &a);
+    n = strlen(a);
+    for (i = 0; i < n; ++i) A[i] = a[n - i - 1] - '0';
+    while (lim < (n << 1)) lim <<= 1;
+    scanf("%s", &b);
+    n = strlen(b);
+    for (i = 0; i < n; ++i) B[i] = b[n - i - 1] - '0';
+    while (lim < (n << 1)) lim <<= 1;
+    for (i = 0; i < lim; ++i)
+        r[i] = (i & 1) * (lim >> 1) + (r[i >> 1] >> 1);
+    ntt(A, lim, 1);
+    ntt(B, lim, 1);
+    for (i = 0; i < lim; ++i)
+        C[i] = 1ll * A[i] * B[i] % P;
+    ntt(C, lim, -1);
+    int len(0);
+    for (i = 0; i < lim; ++i) {
+        if (C[i] >= 10)
+            len = i + 1,
+            C[i + 1] += C[i] / 10, C[i] %= 10;
+        if (C[i]) len = max(len, i);
+    }
+    while (C[len] >= 10)
+        C[len + 1] += C[len] / 10, C[len] %= 10, len++;
+    for (i = len; ~i; --i)
+        putchar(C[i] + '0');
+    puts("");
+    return 0;
 }
