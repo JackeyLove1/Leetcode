@@ -70,7 +70,7 @@ void fft(Complex a[], int inv) {
     }
 }
 // tot代表最高位
-void get_fft(Complex a[], Complex b[], int c[]) {
+void Conv(Complex a[], Complex b[], int c[]) {
     while ((1 << bit) < n + m + 1) bit++;
     tot = 1 << bit;
     for (int i = 0; i < tot; i++)
@@ -88,7 +88,7 @@ int main() {
     cin >> n >> m;
     for (int i = 0; i <= n; ++i) cin >> a[i].x;
     for (int i = 0; i <= m; ++i) cin >> b[i].x;
-    get_fft(a, b, c);
+    Conv(a, b, c);
     for (int i = 0; i <= n + m; ++i) {
         cout << c[i] << " ";
     }
