@@ -1,6 +1,0 @@
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/CMakeFiles/rebuild_cache.dir
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/CMakeFiles/edit_cache.dir
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/CMakeFiles/demo3.dir
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/mylib/CMakeFiles/rebuild_cache.dir
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/mylib/CMakeFiles/edit_cache.dir
-/Users/arexiusvan/Desktop/Leetcode/muduoStduy/13/demo3/mylib/CMakeFiles/mylib.dir
