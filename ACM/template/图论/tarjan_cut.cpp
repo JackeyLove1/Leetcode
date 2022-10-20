@@ -29,7 +29,7 @@ void tarjan(int u)
         {
             tarjan(j);
             low[u] = min(low[u], low[j]);
-            if (low[j] >= dfn[u]) cnt ++ ;
+            if (low[j] >= dfn[u]) cnt ++ ; // u为割点
         }
         else low[u] = min(low[u], dfn[j]);
     }
