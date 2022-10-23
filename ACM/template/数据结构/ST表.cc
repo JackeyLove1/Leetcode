@@ -1,6 +1,28 @@
+
 #include <bits/stdc++.h>
 using namespace std;
 // 除 RMQ 以外，还有其它的“可重复贡献问题”。例如“区间按位和”、“区间按位或”、“区间 GCD”，ST 表都能高效地解决
+
+constexpr int N = 1e6 + 100;
+int f[N][31], g[N][31], nums[N];
+
+void ST_build(int n) {
+    for (int j = 1; (1 << j) <= n; j++) {
+        for (int i = 1; i + (1 << j) - 1 <= n; i++) {
+            f[i][j] = std::max(f[i][j - 1], f[i + (1 << (j - 1))][j - 1]);
+            g[i][j] = std::min(g[i][j - 1], g[i + (1 << (j - 1))][j - 1]);
+            // cout <<"i: " << i <<" j: " << j <<" f: " << f[i][j] <<" g: " << g[i][j] << endl;
+        }
+    }
+
+}
+
+inline int query(int l, int r) {
+    int cnt = std::log2(r - l + 1), len = 1 << cnt;
+    auto maxn = std::max(f[l][cnt], f[r - len + 1][cnt]);
+    auto minn = std::min(g[l][cnt], g[r - len + 1][cnt]);
+    return maxn - minn;
+}
 
 template <typename T>
 class SparseTable {
@@ -60,6 +82,7 @@ int main() {
   return 0;
 }
 
+int dp[N][31];
 void ST_build(int n){
     for(int j = 1; (1<<j) <= n; j++)
         for(int i = 1; i+(1<<j)-1 <= n ; i++)

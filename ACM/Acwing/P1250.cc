@@ -7,7 +7,7 @@ static inline void fhj() {
     cin.tie(nullptr), cout.tie(nullptr);
 }
 
-constexpr int N = 1e5 + 100;
+constexpr int N = 1e6 + 100;
 using ll = long long;
 using PII = pair<int, int>;
 int ne[N], h[N], e[N], w[N], cnt[N], idx;
@@ -37,7 +37,7 @@ bool spfa(int s) {
                 if (!st[j]) {
                     q.push({dist[j], j});
                     st[j] = true;
-                    if (++cnt[j] >= n + 1) {// 包含超级源点
+                    if (++cnt[j] > n + 1) {
                         return true;
                     }
                 }
@@ -51,20 +51,22 @@ int main() {
     fhj();
     cin >> n >> m;
     memset(h, -1, sizeof h);
+    int s = n + 1;
+    for (int i = 0; i <= n; ++i) add(s, i, 0);
     while (m--) {
         int a, b, c;
         cin >> a >> b >> c;
-        add(b, a, c);
+        add(b, a - 1, -c);
     }
     for (int i = 1; i <= n; ++i) {
-        add(0, i, 0);
+        add(i - 1, i, 1);
+        add(i, i - 1, 0);
     }
-    if (spfa(0)) {
-        cout << "NO" << endl;
-    } else {
-        for (int i = 1; i <= n; ++i) {
-            cout << dist[i] << " ";
-        }
+    spfa(s);
+    auto minn = INT32_MAX;
+    for(int i = 0; i <= n; ++i){
+        minn = std::min(minn, dist[i]);
     }
+    cout << dist[n] - minn << endl;
     return 0;
 }
