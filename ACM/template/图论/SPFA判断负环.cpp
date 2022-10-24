@@ -42,7 +42,7 @@ bool spfa(){
                 }
                 if(!st[j]){
                     q.push(j);
-                    st[j]=true;
+                    st[j]=true; // ++cnt[j] > n
                 }
             }
         }

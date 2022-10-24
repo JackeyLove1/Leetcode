@@ -58,6 +58,7 @@ int main()
 }
 
 /*
+// 这下面的写法根据公式好理解
 int exgcd(int a, int b, int &x, int &y)
 {
     if (b == 0)
