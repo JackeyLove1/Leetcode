@@ -72,3 +72,51 @@ int main() {
     cout << solve(r) - solve(l - 1) << endl;
     return 0;
 }
+
+/*
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline void fhj() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+}
+
+static int f[11][10];
+int a[20];
+
+int dfs(int pos, int pre, bool limit) {
+    if (pos == -1)return 1;
+    int &v = f[pos][pre];
+    if (!limit && v != -1) return v;
+    int res = 0;
+    int up = limit ? a[pos] : 9;
+    for (int i = 0; i <= up; ++i) {
+        res += dfs(pos - 1, i, limit && i == a[pos]);
+    }
+    if (!limit) v = res;
+    return res;
+}
+
+int solve(int x) {
+    if (!x) return 1;
+    int pos = 0;
+    memset(f, -1, sizeof f);
+    while (x) {
+        a[pos++] = x % 10;
+        x /= 10;
+    }
+    return dfs(pos - 1, 0, 1);
+}
+
+int main() {
+    fhj();
+    int l, r;
+    while (cin >> l >> r && l && r) {
+        cout << solve(r) - solve(l - 1) << endl;
+    }
+    return 0;
+}
+*/
