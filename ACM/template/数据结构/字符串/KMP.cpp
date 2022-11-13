@@ -8,6 +8,30 @@ int n, m;
 int ne[N];
 char s[M], p[N];
 
+/*
+int main() {
+    string s, t;
+    cin >> n >> s;
+    cin >> m >> t;
+    memset(ne, 0, sizeof ne);
+    for (int i = 1; i < n; ++i) {
+        int j = ne[i - 1];
+        while (j > 0 && s[i] != s[j]) j = ne[j];
+        if (s[i] == s[j]) ++j;
+        ne[i] = j;
+        cout << "i: " << i << " ne[i]: " << ne[i] << endl;
+    }
+    for (int i = 0, j = 0; i < m; ++i) {
+        while (j && t[i] != s[j]) j = ne[j - 1];
+        if (t[i] == s[j]) ++j;
+        if (j == n) {
+            cout << i - n + 1 << " ";
+            j = ne[j - 1];
+        }
+    }
+    return 0;
+}
+*/
 int main()
 {
     cin >> n >> p + 1 >> m >> s + 1;
@@ -47,29 +71,6 @@ vector<int> prefix_function(string s) {
     pi[i] = j;
   }
   return pi;
-}
-
-int main() {
-    string s, t;
-    cin >> n >> s;
-    cin >> m >> t;
-    memset(ne, 0, sizeof ne);
-    for (int i = 1; i < n; ++i) {
-        int j = ne[i - 1];
-        while (j > 0 && s[i] != s[j]) j = ne[j];
-        if (s[i] == s[j]) ++j;
-        ne[i] = j;
-        cout << "i: " << i << " ne[i]: " << ne[i] << endl;
-    }
-    for (int i = 0, j = 0; i < m; ++i) {
-        while (j && t[i] != s[j]) j = ne[j - 1];
-        if (t[i] == s[j]) ++j;
-        if (j == n) {
-            cout << i - n + 1 << " ";
-            j = ne[j - 1];
-        }
-    }
-    return 0;
 }
 
 */
