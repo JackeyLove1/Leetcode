@@ -42,6 +42,7 @@ LL calc(LL s) { //容斥原理
                 t += c[j] * (d[j] + 1);
                 sign = -sign;
             }
+        // auto sign = count(i) % 2 ? 1 : -1;
         if (s >= t) res += f[s - t] * sign;
     }
     return f[s] - res;
