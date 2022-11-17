@@ -15,11 +15,6 @@ using namespace std;
 using ll = long long;
 using PII = pair<int, int>;
 
-const int N = 1e6 + 10, M = 1250;
-int primes[N];
-bool st[N];
-int cnt;
-
 static inline void fhj() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
