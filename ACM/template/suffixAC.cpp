@@ -1,3 +1,126 @@
+/*
+#pragma GCC optimize(2)
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+inline void fhj() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
+}
+
+constexpr int N = 2000010;
+using ll = long long;
+int tot = 1, last = 1;
+struct Node {
+    int len, fa;
+    int ch[26];
+} node[N];
+char str[N];
+ll f[N], ans;
+int h[N], e[N], ne[N], idx;
+
+inline void extend(int c) {
+    int p = last, np = last = ++tot;
+    f[tot] = 1;
+    node[np].len = node[p].len + 1;
+    for (; p && !node[p].ch[c]; p = node[p].fa) node[p].ch[c] = np;
+    if (!p) node[np].fa = 1;
+    else {
+        int q = node[p].ch[c];
+        if (node[q].len == node[p].len + 1) node[np].fa = q;
+        else {
+            int nq = ++tot;
+            node[nq] = node[q], node[nq].len = node[p].len + 1;
+            node[q].fa = node[np].fa = nq;
+            for (; p && node[p].ch[c] == q; p = node[p].fa) node[p].ch[c] = nq;
+        }
+    }
+}
+
+inline void add(int a, int b) {
+    e[idx] = b, ne[idx] = h[a], h[a] = idx++;
+}
+
+void dfs(int u) {
+    for (int i = h[u]; ~i; i = ne[i]) {
+        dfs(e[i]);
+        f[u] += f[e[i]];
+    }
+    if (f[u] > 1) ans = max(ans, f[u] * node[u].len);
+}
+
+int main() {
+    scanf("%s", str);
+    for (int i = 0; str[i]; i++) extend(str[i] - 'a');
+    memset(h, -1, sizeof h);
+    for (int i = 2; i <= tot; i++) add(node[i].fa, i);
+    dfs(1);
+    printf("%lld\n", ans);
+    return 0;
+}
+*/
+
+/*
+// Luogu P3804 【模板】后缀自动机 (SAM)
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+typedef long long LL;
+const int N=2e6+10;
+char str[N];
+vector<int> e[N];//邻接表
+LL cnt[N],ans;
+int tot=1,np=1;
+//fa链接边终点,ch转移边终点,len最长串长度
+int fa[N],ch[N][26],len[N];
+
+void extend(int c){
+  //p回跳指针, np新点, q链接点, nq新链接点
+  int p=np; np=++tot;//p指向旧点, np是新点
+  len[np]=len[p]+1; cnt[np]=1;//子串出现次数 
+  //p沿链接边回跳，从旧点向新点建转移边
+  for(;p&&!ch[p][c];p=fa[p])ch[p][c]=np;
+  
+  //1.如果c是新字符，从新点向根节点建链接边
+  if(p==0)fa[np]=1;
+  else{//如果c是旧字符
+    int q=ch[p][c];//q是链接点
+    //2.若链接点合法，从新点向q建链接边
+    if(len[q]==len[p]+1)fa[np]=q;
+    //3.若链接点不合法，则裂开q点，重建两类边
+    else{
+      int nq=++tot;//nq是新链接点
+      len[nq]=len[p]+1;
+      //重建nq,q,np的链接边
+      fa[nq]=fa[q]; fa[q]=nq; fa[np]=nq;
+      //指向q的转移边改为指向nq
+      for(;p&&ch[p][c]==q;p=fa[p])ch[p][c]=nq;
+      //从q发出的转移边复制给nq
+      memcpy(ch[nq],ch[q],sizeof(ch[q]));
+    }
+  }
+}
+void dfs(int u){ 
+  for(auto v : e[u]){
+    dfs(v);
+    cnt[u]+=cnt[v];
+  }
+  if(cnt[u]>1)ans=max(ans,cnt[u]*len[u]);
+}
+int main(){
+  scanf("%s",str);
+  for(int i=0;str[i];i++)extend(str[i]-'a');
+  for(int i=2;i<=tot;i++)e[fa[i]].push_back(i);
+  dfs(1);
+  printf("%lld\n",ans);
+  return 0;
+}
+*/
 #include <iostream>
 #include <cstring>
 #include <algorithm>
