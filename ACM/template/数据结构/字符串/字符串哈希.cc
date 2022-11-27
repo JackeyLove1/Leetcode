@@ -1,3 +1,10 @@
+/*
+unsigned constexpr const_hash(char const *input) {
+    return *input ?
+           static_cast<unsigned int>(*input) + 33 * const_hash(input + 1) :
+           5381;
+}
+*/
 class HashString {
 private:
     typedef unsigned long long ull;
