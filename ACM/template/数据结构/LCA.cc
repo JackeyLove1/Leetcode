@@ -57,6 +57,31 @@ int lca(int a, int b)
     return fa[a][0];
 }
 
+/*
+int lca(int x, int y)
+{
+    if(find(x)!=find(y)) return -1; //不连通，输出-1 
+    int ans=INF;
+    if(deep[x]>deep[y]) swap(x,y); //保证y节点更深 
+    //将y节点上提到于x节点相同深度 
+    for(int i=20; i>=0; i--)
+        if(deep[fa[y][i]]>=deep[x]){
+            ans=min(ans, w[y][i]);  //更新最大载重（最小边权） 
+            y=fa[y][i]; //修改y位置 
+        }
+    if(x==y) return ans; //如果位置已经相等，直接返回答案 
+    //寻找公共祖先 
+    for(int i=20; i>=0; i--)
+        if(fa[x][i]!=fa[y][i]){
+            ans=min(ans, min(w[x][i], w[y][i])); //更新最大载重（最小边权）
+            x=fa[x][i]; 
+            y=fa[y][i]; //修改x,y位置 
+        }
+    ans=min(ans, min(w[x][0], w[y][0]));
+    //更新此时x,y到公共祖先最大载重，fa[x][0], fa[y][0]即为公共祖先 
+    return ans;
+}
+*/
 int main()
 {
     scanf("%d", &n);
