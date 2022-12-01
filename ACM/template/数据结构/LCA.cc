@@ -58,6 +58,20 @@ int lca(int a, int b)
 }
 
 /*
+void dfs(int node)
+{
+    vis[node]=true;
+    for(int i=head[node]; i; i=edge2[i].next){ //前向星遍历 
+        int to=edge2[i].to;
+        if(vis[to]) continue;
+        deep[to]=deep[node]+1; //计算深度 
+        fa[to][0]=node; //储存父节点 
+        w[to][0]=edge2[i].w; //储存到父节点的权值 
+        dfs(to);
+    }
+    return ;
+}
+
 int lca(int x, int y)
 {
     if(find(x)!=find(y)) return -1; //不连通，输出-1 
@@ -81,6 +95,20 @@ int lca(int x, int y)
     //更新此时x,y到公共祖先最大载重，fa[x][0], fa[y][0]即为公共祖先 
     return ans;
 }
+kruskal();
+    for(int i=1; i<=n; i++)
+        if(!vis[i]){ //dfs收集信息 
+            deep[i]=1; 
+            dfs(i);
+            fa[i][0]=i;
+            w[i][0]=INF;
+        }
+    //LCA初始化 
+    for(int i=1; i<=20; i++)
+        for(int j=1; j<=n; j++){
+            fa[j][i]=fa[fa[j][i-1]][i-1]; 
+            w[j][i]=min(w[j][i-1], w[fa[j][i-1]][i-1]);
+        }
 */
 int main()
 {
