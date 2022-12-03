@@ -1,0 +1,61 @@
+include_directories(
+        ${PROJECT_SOURCE_DIR}/thirdparty/abseil-cpp)
+
+if(CPPPROJECT_ENABLE_RDMA)
+    include_directories(${PROJECT_SOURCE_DIR}/third/grpc-rdma/thirdparty/protobuf/src
+                        ${CMAKE_BINARY_DIR}/third/grpc-rdma/brpc/output/include
+                        ${CMAKE_BINARY_DIR}/third/brpc-rdma/thirdparty/gflags/include)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBRPC_RDMA")
+else()
+    include_directories(${PROJECT_SOURCE_DIR}/third/thirdparty/protobuf/src
+                        ${PROJECT_SOURCE_DIR}/third/thirdparty/brpc/src
+                        ${CMAKE_BINARY_DIR}/third/thirdparty/gflags/include)
+endif()
+
+file(GLOB COMMON_SRC "*.cc" "absl/*.cc" )
+list(COMMON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/cache.cc)
+MESSAGE(STATUS "COMMON_SRC ${COMMON_SRC}")
+
+add_library(libzookeeper_mt STATIC IMPORTED)
+set_target_properties(libzookeeper_mt PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/../../third/CPP/thirdparty/zookeeper/lib/libzookeeper_mt.a)
+
+add_library(PROJECT_common_sdk STATIC ${COMMON_SRC})
+target_link_libraries(PROJECT_common_sdk
+        gflags
+        brpc-static
+        libprotobuf
+        libzookeeper_mt
+        pthread
+        absl_variant)
+
+if (ENABLE_CPPDTRACE)
+    add_library(cpptrace SHARED IMPORTED)
+    set_target_properties(cpptrace PROPERTIES IMPORTED_LOCATION
+            ${PROJECT_SOURCE_DIR}/third/CPPdtrace/lib/libCPPdtrace.so)
+    target_link_libraries(PROJECT_common_sdk CPPdtrace)
+endif ()
+
+add_library(PROJECT_common STATIC ${COMMON_SRC})
+target_link_libraries(PROJECT_common
+        PROJECT_common_sdk
+        tcmalloc-static)
+
+add_executable(fault_inject_example ${BLOCKSREVER_SRC} ../common/fault_inject_example.cc)
+target_link_libraries(fault_inject_example PROJECT_common)
+
+add_executable(fault_inject_cmd ${BLOCKSREVER_SRC} fault_inject_cmd.cc)
+target_link_libraries(fault_inject_cmd PROJECT_common)
+
+file(GLOB PROJECT_COMMON_TEST_FILES "test/*test*.cc")
+list(REMOVE_ITEM PROJECT_COMMON_TEST_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/test/fault_inject_test.cc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/test/keeper_test.cc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/test/page_builder_test.cc"
+        )
+
+add_executable(PROJECT_common_test ${PROJECT_COMMON_TEST_FILES})
+target_link_libraries(PROJECT_common_test
+        PROJECT_common
+        gtest)
+
+add_test(NAME PROJECT_common_test COMMAND PROJECT_common_test)
