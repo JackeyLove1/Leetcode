@@ -33,7 +33,7 @@ void tarjan(int u)
         }
         else low[u] = min(low[u], dfn[j]);
     }
-
+    // 对于根节点的割点，显而易见的，它的孩子数就是所割的连通分量数
     if (u != root) cnt ++ ;
 
     ans = max(ans, cnt);
