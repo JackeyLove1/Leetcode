@@ -1,3 +1,33 @@
+/*
+int t[N],a[N];
+void update(int i,int x)//将位置i的值加上x
+{
+    while(i<=n) t[i]+=x,i+=i&(-i);
+}
+int query(int i)//查询区间[1,i]的和
+{
+    int res=0;
+    while(i) res+=t[i],i-=i&(-i);
+    return res;
+}
+int query(int l,int r)//查询区间[l,r]的和
+{
+    return query(r)-query(l-1);
+}
+void build()
+{
+    for(int i=1;i<=n;i++) update(i,a[i]);//树状数组的建立相当于依次添加
+}
+void build()
+{
+    for(int i=1;i<=n;i++)
+    {
+        t[i]+=a[i];
+        int j=i+i&(-i);
+        if(j<=n) t[j]+=t[i];
+    }
+}
+*/
 #include <cstdio>
 #include <cstring>
 #include <iostream>
