@@ -103,3 +103,76 @@ signed main() {
 
     return 0;
 }
+
+/*
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define endl '\n'
+#define int long long
+int n, m, r, a[1000005], c[1000005], dfn[1000005], cnt[1000005], idx;
+vector<int>v[1000005];
+int dfs(int x, int fa) {
+    dfn[x] = ++idx;
+    cnt[dfn[x]] = 1;
+
+    for (int i = 0; i < v[x].size(); i++) {
+        int t = v[x][i];
+
+        if (t != fa)
+            cnt[dfn[x]] += dfs(t, x);
+    }
+
+    return cnt[dfn[x]];
+}
+int lowbit(int x) {
+    return x & -x;
+}
+void update(int x, int val) {
+    for (int i = x; i <= n; i += lowbit(i))
+        c[i] += val;
+}
+int query(int x) {
+    int res = 0;
+
+    for (int i = x; i; i -= lowbit(i))
+        res += c[i];
+
+    return res;
+}
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    cin >> n >> m >> r;
+
+    for (int i = 1; i <= n; i++)
+        cin >> a[i];
+
+    for (int i = 1; i < n; i++) {
+        int x, y;
+        cin >> x >> y;
+        v[x].push_back(y);
+        v[y].push_back(x);
+    }
+
+    dfs(r, 0);
+
+    for (int i = 1; i <= n; i++)
+        update(dfn[i], a[i]);
+
+    while (m--) {
+        int op, x, y;
+        cin >> op >> x;
+        x = dfn[x];
+
+        if (op == 1) {
+            cin >> y;
+            update(x, y);
+        } else
+            cout << query(x + cnt[x] - 1) - query(x - 1) << endl;
+    }
+
+    return 0;
+}
+*/
