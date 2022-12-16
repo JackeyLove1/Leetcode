@@ -138,3 +138,28 @@ int main (void)
 	}
 	return 0;
  } 
+
+ /*
+ void build(int n){
+     for(int i=1;i<=n;i++){
+          c[i]=a[i],int t=lowbit(i);
+          for(int j=1;j<t;j*=2) c[i]=max(c[i],c[i-j]);
+    }
+}
+void add(int pos,int x){
+    a[pos]=x;
+    while(pos<=n){
+        c[pos]=a[pos];int t=lowbit(i); 
+        for(int j=1;j<t;j*=2) c[i]=max(c[i],c[i-j]);
+        pos+=lowbit(pos);
+    }
+}
+int query(int l,int r){
+    int ans=a[r];
+    while(1){
+        ans=max(ans,num[r]); if(r==l) break; r--;
+          while(r-l>=lowbit(r)) ans=max(ans,c[r]),r-=lowbit(r);
+    }
+    return ans;
+}
+ */
