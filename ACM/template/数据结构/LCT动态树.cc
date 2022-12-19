@@ -1,6 +1,14 @@
-#include <algorithm>
-#include <cstring>
-#include <iostream>
+/*
+给定 n 个点以及每个点的权值，要你处理接下来的 m 个操作。
+操作有四种，操作从 0 到 3 编号。点从 1 到 n 编号。
+
+0 x y 代表询问从 xx 到 yy 的路径上的点的权值的 xor 和。保证 xx 到 yy 是联通的。
+1 x y 代表连接 xx 到 yy，若 xx 到 yy 已经联通则无需连接。
+2 x y 代表删除边 (x,y)(x,y)，不保证边 (x,y)(x,y) 存在。
+3 x y 代表将点 xx 上的权值变成 yy。
+
+*/
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -77,8 +85,7 @@ void makeroot(int x) // 将x变成原树的根节点
   pushrev(x);
 }
 
-int findroot(
-    int x) // 找到x所在原树的根节点, 再将原树的根节点旋转到splay的根节点
+int findroot(int x) // 找到x所在原树的根节点, 再将原树的根节点旋转到splay的根节点
 {
   access(x);
   while (tr[x].s[0])
