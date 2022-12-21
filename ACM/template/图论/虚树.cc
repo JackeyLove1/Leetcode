@@ -70,5 +70,22 @@ int dist(int x,int y){
     }
     return ret;
 }
+void insert(int x){
+    if (!top){
+        st[++top]=x;
+        return;
+    }
+    int ll=lca(st[top],x);
+    while (dep[st[top-1]]>dep[ll]&&top>1){
+        add(st[top-1],st[top],dist(st[top-1],st[top]));
+        top--;
+    }
+    if (dep[ll]<dep[st[top]]){
+        add(ll,st[top],dist(ll,st[top]));
+        top--; 
+    }
+    if (!top||dep[st[top]]<dep[ll]) st[++top]=ll;
+    st[++top]=x;
+}
 
 */

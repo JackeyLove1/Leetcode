@@ -1,41 +1,35 @@
-/*
-给定 n 个点以及每个点的权值，要你处理接下来的 m 个操作。
-操作有四种，操作从 0 到 3 编号。点从 1 到 n 编号。
-
-0 x y 代表询问从 xx 到 yy 的路径上的点的权值的 xor 和。保证 xx 到 yy 是联通的。
-1 x y 代表连接 xx 到 yy，若 xx 到 yy 已经联通则无需连接。
-2 x y 代表删除边 (x,y)(x,y)，不保证边 (x,y)(x,y) 存在。
-3 x y 代表将点 xx 上的权值变成 yy。
-
-*/
 #include <bits/stdc++.h>
 using namespace std;
-
+inline void fhj(){
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr),cout.tie(nullptr);
+}
 #define N 100010
 #define fa(x) tr[x].p
-#define lc(x) tr[x].s[0]
-#define rc(x) tr[x].s[1]
-#define notroot(x) lc(fa(x)) == x || rc(fa(x)) == x
+#define lson(x) tr[x].s[0]
+#define rson(x) tr[x].s[1]
 int n, m;
 struct node {
   int s[2], p, v, sum;
-  int tag; //翻转懒标记
+  int rev; //翻转懒标记
 } tr[N];
-
-void pushup(int x) { tr[x].sum = tr[lc(x)].sum ^ tr[x].v ^ tr[rc(x)].sum; }
+inline bool isroot(int x) {
+    return lson(fa(x)) != x && rson(fa(x)) != x;
+}
+inline void pushup(int x) { tr[x].sum = tr[lson(x)].sum ^ tr[x].v ^ tr[rson(x)].sum; }
 void pushdown(int x) {
-  if (tr[x].tag) {
-    swap(lc(x), rc(x));
-    tr[lc(x)].tag ^= 1;
-    tr[rc(x)].tag ^= 1;
-    tr[x].tag = 0;
+  if (tr[x].rev) {
+    swap(lson(x), rson(x));
+    tr[lson(x)].rev ^= 1;
+    tr[rson(x)].rev ^= 1;
+    tr[x].rev = 0;
   }
 }
 void rotate(int x) {
   int y = fa(x), z = fa(y);
-  int k = rc(y) == x;
-  if (notroot(y))
-    tr[z].s[rc(z) == y] = x;
+  int k = rson(y) == x;
+  if (!isroot(y))
+    tr[z].s[rson(z) == y] = x;
   fa(x) = z;
   tr[y].s[k] = tr[x].s[k ^ 1];
   fa(tr[x].s[k ^ 1]) = y;
@@ -44,23 +38,23 @@ void rotate(int x) {
   pushup(y), pushup(x);
 }
 void pushall(int x) {
-  if (notroot(x))
+  if (!isroot(x))
     pushall(fa(x));
   pushdown(x);
 }
 void splay(int x) { //伸展
   pushall(x);
-  while (notroot(x)) {
+  while (!isroot(x)) {
     int y = fa(x), z = fa(y);
-    if (notroot(y))
-      (rc(y) == x) ^ (rc(z) == y) ? rotate(x) : rotate(y);
+    if (!isroot(y))
+      (rson(y) == x) ^ (rson(z) == y) ? rotate(x) : rotate(y);
     rotate(x);
   }
 }
 void access(int x) { //通路
   for (int y = 0; x;) {
     splay(x);
-    rc(x) = y;
+    rson(x) = y;
     pushup(x);
     y = x, x = fa(x);
   }
@@ -68,7 +62,7 @@ void access(int x) { //通路
 void makeroot(int x) { //换根
   access(x);
   splay(x);
-  tr[x].tag ^= 1; //打懒标记
+  tr[x].rev ^= 1; //打懒标记
 }
 void split(int x, int y) { //分离
   makeroot(x);
@@ -82,8 +76,8 @@ void output(int x, int y) {
 int findroot(int x) { //找根
   access(x);
   splay(x);
-  while (lc(x))
-    pushdown(x), x = lc(x);
+  while (lson(x))
+    pushdown(x), x = lson(x);
   splay(x); //防止卡链
   return x;
 }
@@ -94,7 +88,7 @@ void link(int x, int y) { //连边
 }
 void cut(int x, int y) { //断边
   makeroot(x);
-  if (findroot(y) == x && fa(y) == x && !lc(y)) {
+  if (findroot(y) == x && fa(y) == x && !lson(y)) {
     fa(y) = 0;
     pushup(x);
   }
@@ -105,10 +99,13 @@ void change(int x, int y) { //修改
   pushup(x);
 }
 int main() {
-  scanf("%d%d", &n, &m);
+  fhj();
+  cin >> n >> m;
   // 初始时所有点都是孤立的
-  for (int i = 1; i <= n; i++)
-    scanf("%d", &tr[i].v);
+  for (int i = 1; i <= n; i++){
+    cin >> tr[i].v;
+    tr[i].sum = tr[i].v;
+  }
   while (m--) {
     int t, x, y;
     scanf("%d%d%d", &t, &x, &y);
