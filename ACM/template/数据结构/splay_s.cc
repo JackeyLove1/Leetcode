@@ -1,19 +1,4 @@
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-#include <vector>
-#include <map>
-#include <set>
-#include <list>
-#include <queue>
-#include <cmath>
-#include <unordered_map>
-#include <unordered_set>
-#include <string>
+#include <bits/stdc++>
 
 using namespace std;
 
