@@ -10,22 +10,37 @@ static inline void fhj() {
 using ull = unsigned long long;
 using ll = long long;
 using PII = pair<int, int>;
+#define ls(x) tr[x].s[0]
+#define rs(x) tr[x].s[1]
 
-constexpr int N = 1e5 + 100, INF = 1e9;
+constexpr int N = 2000010, INF = 1e9;
 
 int n, m;
+// union set
+int fa[N];
 
+int find(int x) {
+    if (x != fa[x]) fa[x] = find(fa[x]);
+    return fa[x];
+}
+
+inline void merge(int a, int b) {
+    a = find(a), b = find(b);
+    fa[a] = b;
+}
+
+// splay
 struct Node {
     int s[2], p, v;
-    int size, cnt, flag;
+    int size, cnt, flag, id;
 
-    void init(int _v, int _p) {
-        v = _v, p = _p;
+    void init(int _v, int _p, int _id) {
+        v = _v, p = _p, id = _id;
         size = 1, flag = 0, cnt = 1;
     }
 } tr[N];
 
-int root, idx;
+int root[N], idx;
 
 void pushup(int x) {
     tr[x].size = tr[tr[x].s[0]].size + tr[tr[x].s[1]].size + tr[x].cnt;
@@ -49,7 +64,7 @@ void rotate(int x) {
     pushup(y), pushup(x);
 }
 
-void splay(int x, int k) {
+void splay(int x, int k, int b) {
     while (tr[x].p != k) {
         int y = tr[x].p, z = tr[y].p;
         if (z != k) {
@@ -58,36 +73,36 @@ void splay(int x, int k) {
         }
         rotate(x);
     }
-    if (!k) root = x;
+    if (!k) root[b] = x;
 }
 
 // 获取值为v的节点然后旋转到根
-int makeroot(int v) {
-    int u = root;
+int makeroot(int v, int b) {
+    int u = root[b];
     while (u && tr[u].s[v > tr[u].v] && v != tr[u].v) {
         // pushdown(u);
         u = tr[u].s[v > tr[u].v];
     }
-    splay(u, 0);
+    splay(u, 0, b);
     return u;
 }
 
-int insert(int v) {
-    int u = root, p = 0;
+int insert(int v, int id, int b) {
+    int u = root[b], p = 0;
     while (u && tr[u].v != v) p = u, u = tr[u].s[v > tr[u].v];
     if (u) tr[u].cnt++;
     else {
         u = ++idx;
         if (p) tr[p].s[v > tr[p].v] = u;
-        tr[u].init(v, p);
+        tr[u].init(v, p, id);
     }
-    splay(u, 0);
+    splay(u, 0, b);
     return u;
 }
 
 // 获得第k大的数
-int kth(int k) {
-    int u = root;
+int kth(int k, int b) {
+    int u = root[b];
     while (u) {
         pushdown(u);
         int y = tr[u].s[0];
@@ -97,20 +112,20 @@ int kth(int k) {
         } else if (tr[y].size >= k) u = y;
         else break;
     }
-    splay(u, 0);
+    splay(u, 0, b);
     return tr[u].v;
 }
 
 // 获取值为v的排名
-int getRank(int v) {
-    makeroot(v);
-    return tr[tr[root].s[0]].size;
+int getRank(int v, int b) {
+    makeroot(v, b);
+    return tr[tr[root[b]].s[0]].size;
 }
 
 // 获取前驱，严格小于v的节点
-int getPrev(int v) {
-    makeroot(v);
-    int u = root;
+int getPrev(int v, int b) {
+    makeroot(v, b);
+    int u = root[b];
     if (tr[u].v < v) return u;
     u = tr[u].s[0];
     while (tr[u].s[1]) u = tr[u].s[1];
@@ -118,9 +133,9 @@ int getPrev(int v) {
 }
 
 // 获取后继，严格大于v的节点
-int getNext(int v) {
-    makeroot(v);
-    int u = root;
+int getNext(int v, int b) {
+    makeroot(v, b);
+    int u = root[b];
     if (tr[u].v > v) return u;
     u = tr[u].s[1];
     while (tr[u].s[0]) u = tr[u].s[0];
@@ -128,17 +143,17 @@ int getNext(int v) {
 }
 
 // 删除v
-void del(int v) {
-    int pre = getPrev(v);
-    int nxt = getNext(v);
-    splay(pre, 0), splay(nxt, pre);
+void del(int v, int b) {
+    int pre = getPrev(v, b);
+    int nxt = getNext(v, b);
+    splay(pre, 0, b), splay(nxt, pre, b);
     int node = tr[nxt].s[0];
     if (tr[node].cnt > 1) {
         tr[node].cnt--;
-        splay(node, 0);
+        splay(node, 0, b);
     } else {
         tr[nxt].s[0] = 0;
-        splay(nxt, 0);
+        splay(nxt, 0, b);
     }
 }
 
@@ -150,42 +165,43 @@ void output(int u) {
     if (tr[u].s[1]) output(tr[u].s[1]);
 }
 
-// 翻转[l, r]之间的区间
-// 获得l的前驱节点l0和r的后继节点r0
-// 然后将l0挂载到0下，将r0挂载到l0下，最后将rev翻转即可
-void splay_reverse(int l, int r) {
-    // 在有-INF和INF为左右节点的情况下是这样翻转的
-    auto l0 = kth(l - 1), r0 = kth(r + 1);
-    splay(l0, 0), splay(r0, l0);
-    tr[tr[r0].s[0]].flag ^= 1;
+void dfs(int u, int b) {
+    if (ls(u)) dfs(ls(u), b);
+    if (rs(u)) dfs(rs(u), b);
+    insert(tr[u].v, tr[u].id, b);
 }
 
 inline int read() {
-  int x = 0, f = 0, ch;
-  while (!isdigit(ch = getchar())) f |= ch == '-';
-  while (isdigit(ch)) x = (x << 1) + (x << 3) + (ch ^ 48), ch = getchar();
-  return f ? -x : x;
+    int x = 0, f = 0, ch;
+    while (!isdigit(ch = getchar())) f |= ch == '-';
+    while (isdigit(ch)) x = (x << 1) + (x << 3) + (ch ^ 48), ch = getchar();
+    return f ? -x : x;
 }  // 快读
 
 int main() {
-    fhj();
-    cin >> n;
-    int L = insert(-INF), R = insert(INF);
-    while (n--) {
-        int op, x;
-        cin >> op >> x;
-        if (op == 1) {
-            insert(x);
-        } else if (op == 2) {
-            del(x);
-        } else if (op == 3) {
-            cout << getRank(x) << endl;
-        } else if (op == 4) {
-            cout << kth(x + 1) << endl;
-        } else if (op == 5) {
-            cout << tr[getPrev(x)].v << endl;
+    n = read(), m = read();
+    for (int i = 1; i <= n; ++i) {
+        int v = read();
+        fa[i] = i;
+        tr[i].init(v, 0, i);
+    }
+    idx = n;
+    while (m--) {
+        string op;
+        cin >> op;
+        if (op == "B") {
+            int a = read(), b = read();
+            a = find(a), b = find(b);
+            if (a != b) {
+                if (tr[root[a]].size > tr[root[b]].size) std::swap(a, b);
+                dfs(root[a], b);
+                merge(a, b);
+            }
         } else {
-            cout << tr[getNext(x)].v << endl;
+            int a = read(), k = read();
+            a = find(a);
+            if (tr[root[a]].size < k) cout << -1 << endl;
+            else cout << kth(root[a], k) << endl;
         }
     }
     return 0;
