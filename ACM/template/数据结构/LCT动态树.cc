@@ -116,6 +116,13 @@ void cut(int x, int y) // 如果x和y之间存在边，则删除该边
   }
 }
 
+inline int read() {
+    int x = 0, f = 0, ch;
+    while (!isdigit(ch = getchar())) f |= ch == '-';
+    while (isdigit(ch)) x = (x << 1) + (x << 3) + (ch ^ 48), ch = getchar();
+    return f ? -x : x;
+}  // 快读
+
 int main() {
   scanf("%d%d", &n, &m);
   for (int i = 1; i <= n; i++)
