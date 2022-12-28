@@ -11,7 +11,7 @@ using ll = long long;
 #define lson tr[u].s[0]
 #define rson tr[u].s[1]
 
-constexpr int N = 6e5 + 100, INF = 1e9;
+constexpr int N = 3e5 + 100, INF = 1e9;
 
 int n, m;
 
@@ -118,6 +118,32 @@ int makeroot(int v) {
     return u;
 }
 
+// 获得第k大的数或者得到splay中位置在k的数
+int kth(int k) {
+    int u = root;
+    while (u) {
+        pushdown(u);
+        if (tr[lson].size >= k) u = lson;
+        else if (tr[lson].size + 1 == k) return u;
+        else k -= tr[lson].size + 1, u = rson;
+    }
+    // splay(u, 0);
+    // return tr[u].v;
+}
+
+// 序列splay的insert
+int insert(int pos, int v) {
+    int l = kth(pos), r = kth(pos + 1);
+    splay(l, 0), splay(r, l);
+    int u = nodes.back();
+    nodes.pop_back();
+    tr[u].init(v, r);
+    tr[r].s[0] = u;
+    return u;
+    // splay(r, 0);
+}
+
+// 权值splay的insert
 int insert(int v) {
     int u = root, p = 0;
     while (u && tr[u].v != v) p = u, u = tr[u].s[v > tr[u].v];
@@ -129,19 +155,6 @@ int insert(int v) {
     }
     splay(u, 0);
     return u;
-}
-
-// 获得第k大的数
-int kth(int k) {
-    int u = root;
-    while (u) {
-        pushdown(u);
-        if (tr[lson].size >= k) u = lson;
-        else if (tr[lson].size + 1 == k) return u;
-        else k -= tr[lson].size + 1, u = rson;
-    }
-    // splay(u, 0);
-    // return tr[u].v;
 }
 
 // 获取值为v的排名
@@ -217,58 +230,42 @@ int main() {
     for (int i = 1; i < N; ++i) {
         nodes.push_back(i);
     }
-    cin >> n >> m;
+    cin >> n;
     tr[0].ms = w[0] = w[n + 1] = -INF;
     for (int i = 1; i <= n; ++i) cin >> w[i];
     root = build(0, n + 1, 0);
     string op;
-    int posi, tot, c;
+    int posi, posj, c;
+    cin >> m;
     while (m--) {
         cin >> op;
         // cout << "op: " << op << endl;
-        if (op == "INSERT") {
-            cin >> posi >> tot;
-            for (int i = 1; i <= tot; ++i) cin >> w[i];
-            // 从第posi位置后插入
-            int l = kth(posi + 1), r = kth(posi + 2);
-            splay(l, 0), splay(r, l);
-            int u = build(1, tot, r);
-            tr[r].s[0] = u;
-            splay(r, 0);
-        } else if (op == "DELETE") {
-            cin >> posi >> tot;
-            // 从posi位置开始
-            int l = kth(posi), r = kth(posi + tot + 1);
+        if (op == "I") {
+            cin >> posi >> c;
+            int u = insert(posi, c);
+            splay(u, 0);
+        } else if (op == "D") {
+            cin >> posi;
+            int l = kth(posi), r = kth(posi + 2);
             splay(l, 0), splay(r, l);
             int u = tr[r].s[0];
             dfs(u);
             tr[r].s[0] = 0;
             splay(r, 0);
-        } else if (op == "MAKE-SAME") {
-            cin >> posi >> tot >> c;
-            int l = kth(posi), r = kth(posi + tot + 1);
+        } else if (op == "R") {
+            cin >> posi >> c;
+            int l = kth(posi), r = kth(posi + 2);
             splay(l, 0), splay(r, l);
-            auto &son = tr[tr[r].s[0]];
-            son.same = 1, son.v = c, son.sum = c * son.size;
-            if (c > 0) son.ls = son.ms = son.rs = son.sum;
-            else son.ls = son.rs = 0, son.ms = c;
-            splay(r, 0);
-        } else if (op == "REVERSE") {
-            cin >> posi >> tot;
-            int l = kth(posi), r = kth(posi + tot + 1);
+            auto u = tr[r].s[0];
+            tr[u].v = c;
+            splay(u, 0);
+        } else if (op == "Q") {
+            cin >> posi >> posj;
+            int l = kth(posi), r = kth(posj + 2);
             splay(l, 0), splay(r, l);
             auto &u = tr[tr[r].s[0]];
-            u.rev ^= 1;
-            std::swap(u.ls, u.rs);
-            std::swap(u.s[0], u.s[1]);
+            cout << u.ms << endl;
             splay(r, 0);
-        } else if (op == "GET-SUM") {
-            cin >> posi >> tot;
-            int l = kth(posi), r = kth(posi + tot + 1);
-            splay(l, 0), splay(r, l);
-            cout << tr[tr[r].s[0]].sum << endl;
-        } else if (op == "MAX-SUM") {
-            cout << tr[root].ms << endl;
         }
     }
     return 0;
