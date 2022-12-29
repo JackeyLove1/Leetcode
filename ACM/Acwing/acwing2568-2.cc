@@ -1,24 +1,21 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
-inline void fhj() {
+inline void fhj(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
 }
-
 using ll = long long;
 const int N = 1e5 + 10, M = N << 1;
-#define lson(u) tr[u << 1]
-#define rson(u) tr[u << 1 | 1]
+
 int n, m;
 int h[N], w[N], e[M], ne[M], idx; //建树
 int id[N], nw[N], cnt; //id:节点的dfn序编号，nw[id[i]]是i的权值w（w -> nw的映射）
 int dep[N], sz[N], top[N], fa[N], son[N];
 //sz:子树节点个数，top:重链的顶点，son:重儿子，fa:父节点
-struct Node {
-    int l, r, v, mv;
-    ll sum, add;
+struct SegmentTree {
+    int l, r;
+    ll sum, flag;
 } tr[N << 2];
 
 void add(int a, int b) {
@@ -52,17 +49,16 @@ void dfs2(int u, int t) {
 
 void pushup(int u) {
     tr[u].sum = tr[u << 1].sum + tr[u << 1 | 1].sum;
-    tr[u].mv = std::max(lson(u).sum, rson(u).sum);
 }
 
 void pushdown(int u) {
     auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
-    if (root.add) {
-        left.sum += root.add * (left.r - left.l + 1);
-        left.add += root.add;
-        right.sum += root.add * (right.r - right.l + 1);
-        right.add += root.add;
-        root.add = 0;
+    if (root.flag) {
+        left.sum += root.flag * (left.r - left.l + 1);
+        left.flag += root.flag;
+        right.sum += root.flag * (right.r - right.l + 1);
+        right.flag += root.flag;
+        root.flag = 0;
     }
 }
 
@@ -76,7 +72,7 @@ void build(int u, int l, int r) {
 
 void update(int u, int l, int r, int k) {
     if (l <= tr[u].l && r >= tr[u].r) {
-        tr[u].add += k;
+        tr[u].flag += k;
         tr[u].sum += k * (tr[u].r - tr[u].l + 1);
         return;
     }
@@ -142,8 +138,8 @@ int main() {
     // fhj();
     memset(h, -1, sizeof h);
     n = read();
-    for (int i = 1; i <= n; ++i) cin >> w[i];
-    for (int i = 1; i < n; ++i) {
+    for(int i = 1; i <= n; ++i) cin >> w[i];
+    for(int i = 1; i < n; ++i){
         int x = read(), y = read();
         add(x, y), add(y, x);
     }
@@ -151,19 +147,19 @@ int main() {
     dfs2(1, 1);
     build(1, 1, n);
     m = read();
-    while (m--) {
+    while (m--){
         int op, u, v, k;
         op = read();
-        if (op == 1) {
+        if (op == 1){
             u = read(), v = read(), k = read();
             update_path(u, v, k);
-        } else if (op == 2) {
+        }else if (op == 2){
             u = read(), k = read();
             update_tree(u, k);
-        } else if (op == 3) {
+        }else if (op == 3){
             u = read(), v = read();
             cout << query_path(u, v) << endl;
-        } else {
+        }else {
             u = read();
             cout << query_tree(u) << endl;
         }
