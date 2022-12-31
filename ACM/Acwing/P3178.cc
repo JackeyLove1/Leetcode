@@ -17,7 +17,7 @@ int id[N], nw[N], cnt; //id:节点的dfn序编号，nw[id[i]]是i的权值w（w 
 int dep[N], sz[N], top[N], fa[N], son[N];
 //sz:子树节点个数，top:重链的顶点，son:重儿子，fa:父节点
 struct Node {
-    int l, r;
+    ll l, r;
     ll sum, add;
 } tr[N << 2];
 
@@ -40,6 +40,7 @@ void dfs1(int u, int father, int depth) {
 //dfs2做剖分（t是重链的顶点）
 void dfs2(int u, int t) {
     id[u] = ++cnt, nw[cnt] = w[u], top[u] = t;
+    // cout << "u: " << u << " id:" << id[u] << " nw:" << nw[cnt] << " top:" << top[u] << endl;
     if (!son[u]) return; //叶节点结束
     dfs2(son[u], t); //重儿子重链剖分
     //处理轻儿子
@@ -111,7 +112,9 @@ ll query_path(int u, int v) {
     ll res = 0;
     while (top[u] != top[v])    //向上爬找到相同重链
     {
+        // cout << "u: " << u << " top[u]: " << top[u] << " v:" << v << " top[v]: " << top[v] << endl;
         if (dep[top[u]] < dep[top[v]]) std::swap(u, v);
+        // cout <<"query " << " l:" << id[top[u]] <<" r:" << id[u] << endl;
         res += query(1, id[top[u]], id[u]);
         u = fa[top[u]];
     }
@@ -121,13 +124,13 @@ ll query_path(int u, int v) {
 }
 
 inline int LCA(int u, int v) {
-  while (top[u] != top[v]) {
-    if (dep[top[u]] > dep[top[v]])
-      u = fa[top[u]];
-    else
-      v = fa[top[v]];
-  }
-  return dep[u] > dep[v] ? v : u;
+    while (top[u] != top[v]) {
+        if (dep[top[u]] > dep[top[v]])
+            u = fa[top[u]];
+        else
+            v = fa[top[v]];
+    }
+    return dep[u] > dep[v] ? v : u;
 }
 
 void update_tree(int u, int k) //子树全部加上k
@@ -150,7 +153,7 @@ inline int read() {
 int main() {
     // fhj();
     memset(h, -1, sizeof h);
-    n = read();
+    n = read(), m = read();
     for (int i = 1; i <= n; ++i) cin >> w[i];
     for (int i = 1; i < n; ++i) {
         int x = read(), y = read();
@@ -159,22 +162,19 @@ int main() {
     dfs1(1, -1, 1);
     dfs2(1, 1);
     build(1, 1, n);
-    m = read();
     while (m--) {
-        int op, u, v, k;
+        int op, x, k;
         op = read();
+        // cout << "op: " << op << endl;
         if (op == 1) {
-            u = read(), v = read(), k = read();
-            update_path(u, v, k);
+            x = read(), k = read();
+            update_path(x, x, k);
         } else if (op == 2) {
-            u = read(), k = read();
-            update_tree(u, k);
-        } else if (op == 3) {
-            u = read(), v = read();
-            cout << query_path(u, v) << endl;
+            x = read(), k = read();
+            update_tree(x, k);
         } else {
-            u = read();
-            cout << query_tree(u) << endl;
+            x = read();
+            printf("%lld\n", query_path(1, x));
         }
     }
     return 0;
