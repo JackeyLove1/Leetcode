@@ -1,9 +1,15 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 using ll = long long;
 const ll MOD = 1000000007;
 const ll MAXN = 100005;
+
+inline void fhj() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
+}
 
 struct Node {
     ll l, r;//l和r表示这一段的起点和终点
@@ -19,7 +25,8 @@ struct Node {
 ll n, m, seed, vmax, a[MAXN];
 set<Node> s;
 
-//以pos去做切割，找到一个包含pos的区间，把它分成[l,pos-1],[pos,r]两半
+// 以pos去做切割，找到一个包含pos的区间，把它分成[l,pos-1],[pos,r]两半
+// 然后返回[pos, r] 的迭代器
 set<Node>::iterator split(int pos) {
     set<Node>::iterator it = s.lower_bound(Node(pos));
     if (it != s.end() && it->l == pos) {
@@ -27,9 +34,7 @@ set<Node>::iterator split(int pos) {
     }
     it--;
     if (it->r < pos) return s.end();
-    ll l = it->l;
-    ll r = it->r;
-    ll v = it->v;
+    ll l = it->l, r = it->r, v = it->v;
     s.erase(it);
     s.insert(Node(l, pos - 1, v));
     //insert函数返回pair，其中的first是新插入结点的迭代器
@@ -37,9 +42,9 @@ set<Node>::iterator split(int pos) {
 }
 
 /*
- * 这里注意必须先计算itr。
+ * 这里注意必须先计算iter
  * 比如现在区间是[1,4]，如果要add的是[1,2],如果先split(1)
- * 那么返回的itl是[1,4]，但是下一步计算itr的时候会把这个区间删掉拆成[1,2]和[3,4]
+ * 那么返回的itl是[1,4]，但是下一步计算iter的时候会把这个区间删掉拆成[1,2]和[3,4]
  * 那么itl这个指针就被释放了
  * */
 void add(ll l, ll r, ll x) {
@@ -49,9 +54,10 @@ void add(ll l, ll r, ll x) {
     }
 }
 
+// 必须先split(r+1) 然后split(l)
 void assign(ll l, ll r, ll x) {
-    set<Node>::iterator itr = split(r + 1), itl = split(l);
-    s.erase(itl, itr);
+    set<Node>::iterator iter = split(r + 1), itl = split(l);
+    s.erase(itl, iter);
     s.insert(Node(l, r, x));
 }
 
@@ -97,9 +103,9 @@ ll ksm(ll x, ll y, ll p) {
 }
 
 ll calP(ll l, ll r, ll x, ll y) {
-    set<Node>::iterator itr = split(r + 1), itl = split(l);
+    set<Node>::iterator iter = split(r + 1), itl = split(l);
     ll ans = 0;
-    for (set<Node>::iterator i = itl; i != itr; ++i) {
+    for (set<Node>::iterator i = itl; i != iter; ++i) {
         ans = (ans + ksm(i->v, x, y) * (i->r - i->l + 1) % y) % y;
     }
     return ans;
@@ -112,6 +118,7 @@ ll rnd() {
 }
 
 int main() {
+    fhj();
     cin >> n >> m >> seed >> vmax;
     for (int i = 1; i <= n; ++i) {
         a[i] = (rnd() % vmax) + 1;
