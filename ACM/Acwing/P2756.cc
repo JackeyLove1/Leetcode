@@ -8,13 +8,10 @@ static inline void fhj() {
 }
 
 using ll = long long;
-using ull = unsigned long long;
-using sll = __int128;
-using PII = pair<int, int>;
 
 using namespace std;
 
-constexpr int N = 100100, M = 200010, INF = 1e8;
+constexpr int N = 1e6 + 100, M = N << 2, INF = 1e8;
 
 // cur为当前弧
 // d为层次图的层次
@@ -66,7 +63,7 @@ ll find(int u, ll limit) {
         int ver = e[i];
         if (d[ver] == d[u] + 1 && f[i]) //当前点是再上一层图的下一层
         {
-            int t = find(ver, min((ll)f[i], limit - flow));
+            int t = find(ver, min((ll) f[i], limit - flow));
             if (!t) d[ver] = -1; // 搜索失败，表示这个点到终点是没有路径的，赋值-1
             // 更新当前容量网络
             f[i] -= t, f[i ^ 1] += t, flow += t;
@@ -91,15 +88,20 @@ inline int read() {
     return f ? -x : x;
 }  // 快读
 
-int main(){
+int main() {
     fhj();
-    cin >> n >> m >> S >> T;
     memset(h, -1, sizeof h);
-    int a, b, c;
-    while (m--){
-        cin >> a >> b >> c;
-        add(a, b, c);
-    }
+    cin >> m >> n;
+    S = n + 1, T = n + 2;
+    for (int i = 1; i <= m; ++i) add(S, i, 1);
+    for (int i = m + 1; i <= n; ++i) add(i, T, 1);
+    int a, b;
+    while (cin >> a >> b && (a != -1 && b != -1)) add(a, b, 1);
     cout << dinic() << endl;
+    for (int i = 0; i < idx; i += 2) {
+        if (e[i] > m && e[i] <= n && !f[i]) {
+            cout << e[i ^ 1] << " " << e[i] << endl;
+        }
+    }
     return 0;
 }
