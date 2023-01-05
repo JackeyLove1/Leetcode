@@ -82,7 +82,7 @@ inline int read() {
     return f ? -x : x;
 }  // 快读
 
-int main(void)
+int main()
 {
     std::cin >> n >> m >> S >> T;
     for (int i = 1; i <= m; ++i) {
