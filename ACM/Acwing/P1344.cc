@@ -8,17 +8,17 @@ static inline void fhj() {
 }
 
 using ll = long long;
-
-constexpr int N = 100100, M = 200010, INF = 1e8;
+constexpr ll INF = std::numeric_limits<long long >::max();
+constexpr int N = 100100, M = 200010;
 
 // cur为当前弧
 // d为层次图的层次
 int n, m, S, T;
-int h[N], e[M], f[M], ne[M], idx;
-ll q[N], d[N], cur[N];
+int h[N], e[M], ne[M], idx;
+ll f[M], q[N], d[N], cur[N];
 
 // 同EK的add
-inline void add(int a, int b, int c) {
+inline void add(int a, int b, ll c) {
     e[idx] = b, f[idx] = c, ne[idx] = h[a], h[a] = idx++; // 正向边
     e[idx] = a, f[idx] = 0, ne[idx] = h[b], h[b] = idx++; // 反向边
 }
@@ -61,7 +61,7 @@ ll find(int u, ll limit) {
         int ver = e[i];
         if (d[ver] == d[u] + 1 && f[i]) //当前点是再上一层图的下一层
         {
-            int t = find(ver, min((ll)f[i], limit - flow));
+            int t = find(ver, min((ll) f[i], limit - flow));
             if (!t) d[ver] = -1; // 搜索失败，表示这个点到终点是没有路径的，赋值-1
             // 更新当前容量网络
             f[i] -= t, f[i ^ 1] += t, flow += t;
@@ -86,15 +86,17 @@ inline int read() {
     return f ? -x : x;
 }  // 快读
 
-int main(){
-    fhj();
-    cin >> n >> m >> S >> T;
+constexpr int MOD = 1001;
+
+int main() {
     memset(h, -1, sizeof h);
-    int a, b, c;
-    while (m--){
-        cin >> a >> b >> c;
-        add(a, b, c);
+    n = read(), m = read();
+    S = 1, T = n;
+    for (int i = 1; i <= m; ++i) {
+        int a = read(), b = read(), c = read();
+        add(a, b, 1ll * c * MOD + 1);
     }
-    cout << dinic() << endl;
+    auto res = dinic();
+    cout << (res / MOD) << " " << (res % MOD) << endl;
     return 0;
 }

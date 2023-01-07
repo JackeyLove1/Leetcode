@@ -61,7 +61,7 @@ ll find(int u, ll limit) {
         int ver = e[i];
         if (d[ver] == d[u] + 1 && f[i]) //当前点是再上一层图的下一层
         {
-            int t = find(ver, min((ll)f[i], limit - flow));
+            int t = find(ver, min((ll) f[i], limit - flow));
             if (!t) d[ver] = -1; // 搜索失败，表示这个点到终点是没有路径的，赋值-1
             // 更新当前容量网络
             f[i] -= t, f[i ^ 1] += t, flow += t;
@@ -86,15 +86,47 @@ inline int read() {
     return f ? -x : x;
 }  // 快读
 
-int main(){
-    fhj();
-    cin >> n >> m >> S >> T;
-    memset(h, -1, sizeof h);
-    int a, b, c;
-    while (m--){
-        cin >> a >> b >> c;
-        add(a, b, c);
+struct student {
+    int school, home;
+};
+
+int main() {
+    int t = read();
+    while (t--) {
+        idx = 0;
+        memset(h, -1, sizeof h);
+        memset(q, 0, sizeof q);
+        memset(d, 0, sizeof d);
+        memset(cur, 0, sizeof cur);
+        n = read();
+        S = 0, T = 2 * n + 1;
+        int tot = 0;
+        vector<student> ps(n + 1);
+        for (int i = 1; i <= n; ++i) {
+            ps[i].school = read();
+            if (ps[i].school) {
+                add(i + n, T, 1);
+            }
+        }
+        for (int i = 1; i <= n; ++i) {
+            ps[i].home = read();
+            if ((ps[i].school && ps[i].home == 0) || (!ps[i].school)) {
+                ++tot;
+                add(S, i, 1);
+            }
+        }
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                int x = read();
+                if (x || i == j) {
+                    add(i, j + n, 1);
+                }
+            }
+        }
+        int res = dinic();
+        // cout << "res:" << res << endl;
+        if (res >= tot) cout << "^_^" << endl;
+        else cout << "T_T" << endl;
     }
-    cout << dinic() << endl;
     return 0;
 }

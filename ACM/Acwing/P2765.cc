@@ -8,6 +8,11 @@ static inline void fhj() {
 }
 
 using ll = long long;
+using ull = unsigned long long;
+using sll = __int128;
+using PII = pair<int, int>;
+
+using namespace std;
 
 constexpr int N = 100100, M = 200010, INF = 1e8;
 
@@ -61,7 +66,7 @@ ll find(int u, ll limit) {
         int ver = e[i];
         if (d[ver] == d[u] + 1 && f[i]) //当前点是再上一层图的下一层
         {
-            int t = find(ver, min((ll)f[i], limit - flow));
+            int t = find(ver, min((ll) f[i], limit - flow));
             if (!t) d[ver] = -1; // 搜索失败，表示这个点到终点是没有路径的，赋值-1
             // 更新当前容量网络
             f[i] -= t, f[i ^ 1] += t, flow += t;
@@ -86,15 +91,36 @@ inline int read() {
     return f ? -x : x;
 }  // 快读
 
-int main(){
-    fhj();
-    cin >> n >> m >> S >> T;
-    memset(h, -1, sizeof h);
-    int a, b, c;
-    while (m--){
-        cin >> a >> b >> c;
-        add(a, b, c);
+int main() {
+    n = read();
+    auto num = n * n;
+    vector<int> nums;
+    for (int i = 1; i <= num; ++i) nums.push_back(i);
+    set<int> s, sqrts;
+    for (int i = 2; i * i <= num; ++i) sqrts.insert(i * i);
+    vector<vector<int>> res(n);
+    for (int i = 0; i < n; ++i) {
+        for (int v: nums) {
+            if (s.count(v)) continue;
+            if (res[i].empty()) {
+                res[i].push_back(v);
+                s.insert(v);
+                continue;
+            }
+            if (sqrts.count(res[i].back() + v)) {
+                res[i].push_back(v);
+                s.insert(v);
+            }
+        }
     }
-    cout << dinic() << endl;
+    int cnt = 0;
+    for (const auto v: res) cnt += v.size();
+    cout << cnt << endl;
+    for (const auto vec: res) {
+        for (const auto v: vec) {
+            cout << v << " ";
+        }
+        cout << endl;
+    }
     return 0;
 }
