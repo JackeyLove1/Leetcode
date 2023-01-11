@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script>
+    function checkCookies() {
+        if (navigator.cookieEnabled == true) {
+            alert("Cookies is used")
+        } else {
+            alert("Cookies is unused")
+        }
+    }
+    function newDoc(){
+        window.location.assign("https://www.runoob.com")
+    }
+    function myFunction3(){
+        $("#h01").html("Hello jQuery")
+    }
+    $(document).ready(myFunction3);
+</script>
+<body onload="checkCookies()">
+<h1 id="h01"></h1>
+<p id="demo">Demo</p>
+<p id="demo2"></p>
+<input type="button" value="load new doc" onclick="newDoc()">
+
+<script>
+    document.write("hello,world!")
+
+    function myFunction() {
+        alert("Hello, World!");
+    }
+
+    function alert2() {
+        window.alert("alert2!");
+    }
+
+    document.write(Date())
+    let a = 123;
+    let b = "123";
+    var person = {
+        firstName: "John",
+        lastName: "Doe",
+        id: 5566,
+        fullName: function () {
+            return this.firstName + this.lastName;
+        }
+    }
+    document.getElementById("demo").innerHTML = person.fullName();
+
+    document.getElementById("demo2").innerHTML =
+        typeof "john" + "<br>" +
+        typeof 3.14 + "<br>" +
+        typeof NaN + "<br>" +
+        typeof false + "<br>" +
+        typeof [1, 2, 3, 4] + "<br>" +
+        typeof {name: 'john', age: 34} + "<br>" +
+        typeof new Date() + "<br>" +
+        typeof function () {
+        } + "<br>" +
+        typeof myCar + "<br>" +
+        typeof null;
+</script>
+
+<button type="button" onclick="document.getElementById('demo').style.display='block'">Click Me!</button>
+<button type="button" onclick="myFunction()">Try it</button>
+<button onclick="getElementById('demo').innerHTML=Date()">What's the time?</button>
+<h2>Link Titles</h2>
+<p>The title attribute specifies extra information about an element. The information is most often shown as a tooltip
+    text when the mouse moves over the element.</p>
+<a href="https://www.w3schools.com/html/" title="Go to W3Schools HTML section">Visit our HTML Tutorial</a>
+<button onclick="myFunction()">click me</button>
+<p id="demo3"></p>
+<button onclick="myFunction2()">click me</button>
+<script>
+    function myFunction(){
+        setInterval(function(){alert("Hello")},3000);
+    }
+    var myVar=setInterval(function(){myTimer()},1000);
+    function myTimer(){
+        var d=new Date();
+        var t=d.toLocaleTimeString();
+        document.getElementById("demo3").innerHTML=t;
+    }
+    function myFunction2(){
+        setTimeout(function(){alert("Hello")},3000);
+    }
+</script>
+</body>
+</html>
+
