@@ -1,3 +1,4 @@
+// go get -u golang.org/x/time
 package main
 
 import (
