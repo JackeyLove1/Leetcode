@@ -240,4 +240,3 @@ file, err := os.Open("test.txt")
 		fmt.Println(eachline)
 	}
 
-// 
