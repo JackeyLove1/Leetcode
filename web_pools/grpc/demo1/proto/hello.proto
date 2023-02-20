@@ -1,0 +1,21 @@
+// protoc --go_out=. hello.proto
+// protoc --go-grpc_out=. hello.proto
+syntax = "proto3";
+
+// 最后生成的go文件在那个目录那个包中 .代表在当前目录生成，service代表生成go文件的包名是service
+option go_package = ".;service";
+
+
+service HelloService{
+  rpc SayHello(HelloRequest) returns (HelloResponse){}
+}
+
+// 1 代表生成在第一个位置
+message HelloRequest{
+  string requestName = 1;
+  // int64  age = 2;
+}
+
+message HelloResponse{
+  string responseMsg = 1;
+}
