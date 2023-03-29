@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="lib/vue.global.js"></script>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+<div id="app">
+    <!-- @submit.prevent -->
+    <form class="form" @submit.prevent="handleSubmit">
+    <div>
+        <div class="input-field">
+            <label for="username">用户名：</label>
+            <button @click="clearUserName">Clear</button>
+        </div>
+        <div class="result">
+            <p>你输入的用户名是：{{ username }}</p>
+        </div>
+
+        <label for="username">UserName</label>
+        <input id="username" type="text" v-model="username" />
+        <label for="gender">gender</label>
+        <div id="gender" class="radio-group"></div>
+        <input name="gender" type="radio" value="male" v-model="gender"> <span>Male</span>
+        <input name="gender" type="radio" value="female" v-model="gender"> <span>Female</span>
+    </div>
+
+    <div id="interset" class="checkbox-group">
+        <input type="checkbox" name="intersets" value="frontend" v-model="intersets"/> <span>Frontend</span>
+        <input type="checkbox" name="intersets" value="backend" v-model="intersets"/> <span>Backend</span>
+        <input type="checkbox" name="intersets" value="fullstack" v-model="intersets"/> <span>FulkStack</span>
+    </div>
+    <label for="ocupation">ocupation:</label>
+    <select name="ocupation" id="ocupation" v-model="ocupation">
+        <option value="frontend">Frontend</option>
+        <option value="backend">Backend</option>
+        <option value="FullStack">FullStack</option>
+    </select>
+    <textarea id="intro" name="intro" v-model="intro">Intro</textarea>
+    <button type="submit">提交</button>
+    </form>
+    <div class="result">
+        <ul>
+            <li>username: {{username}}</li>
+            <li>gender:{{gender}}</li>
+            <li>intersets:{{intersets}}</li>
+            <li>ocupation:{{ocupation}}</li>
+            <li>intro:{{intro}}</li>
+        </ul>
+    </div>
+    <p :style="pStyle" :class="pClass">Title</p>
+    <button @click="increasePSize">Inc</button>
+    <button @click="decreasePSize">Dec</button>
+    <button @click="changeState">Change</button>
+    <div>
+        <span v-html="content"></span>
+        <p> {{content}} </p>
+    </div>
+
+    <div>
+        <input type="text" :[attr]="value" @[event]="handleChange">
+    </div>
+    <div>
+        <ul>
+            <li v-for="todo in todos" :key="todo.id">
+                {{todo.content}}
+            </li>
+        </ul>
+    </div>
+    <div>
+        <ul @mousedown.right="comment.reverse()">
+            <li v-for="content in comments">{{ content}}</li>
+        </ul>
+        <input type="text" v-model="comment" @keydown.enter.exact="pushComment">
+    </div>
+</div>
+
+</body>
+<script lang="ts">
+    const app = Vue.createApp({
+        data() {
+            return {
+                username: "",
+                gender:"",
+                intersets:[],
+                ocupation:'',
+                intro:'',
+                fontSize: 26,
+                isHidden: false,
+                content: `<p>这是一段<span style="color: hsl(0, 80%, 70%);">HTML</span>代码</p>`,
+                attr: "placeholder",
+                value: "put some words",
+                event: 'change',
+                todos: [
+                    {
+                        id: 1,
+                        content: "待办1",
+                    },
+                    {
+                        id: 2,
+                        content: "待办2",
+                    },
+                    {
+                        id: 3,
+                        content: "待办3",
+                    },
+                ],
+                comments: ["好", "非常好", "赞"],
+                comment: "",
+            };
+        },
+        computed: {
+          pStyle() {
+              return {
+                  color: 'red',
+                  fontSize: this.fontSize +'px',
+              }
+          },
+            pClass() {
+              return [{ hide: this.isHidden }]
+            }
+        },
+        methods: {
+            handleInput(e) {
+                this.username = e.target.value;
+            },
+            clearUserName(e) {
+                this.username = '';
+            },
+            handleSubmit(e) {
+                console.log(
+                    this.username,
+                    this.gender,
+                    this.intersets,
+                    this.ocupation,
+                    this.intro
+                )
+            },
+            increasePSize() {
+                this.fontSize += 1
+            },
+            decreasePSize() {
+                if (this.fontSize > 10){
+                    this.fontSize -= 1
+                }
+            },
+            changeState() {
+                this.isHidden = !this.isHidden
+                console.log("hidden:"+this.isHidden)
+            },
+            handleChange() {
+                console.log("input change");
+            },
+            pushComment() {
+                this.comments.push(this.comment);
+                this.comment = '';
+            }
+        },
+    });
+    app.mount("#app");
+</script>
+</html>
