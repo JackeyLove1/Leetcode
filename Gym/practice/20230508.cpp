@@ -9,6 +9,7 @@
 #include <any>
 #include <variant>
 #include <bitset>
+#include <type_traits>
 
 #include <boost/algorithm/minmax.hpp>
 #include <boost/utility.hpp>
@@ -70,6 +71,12 @@ std::unique_ptr<Metric> create_metric(const std::string &name, const std::initia
     return metric;
 }
 
+#define OUT(...) out({__VA_ARGS__})
+
+template<typename T>
+void out(std::initializer_list<T> list) {
+    std::for_each(list.begin(), list.end(), [](const auto &e) { std::cout << "out: " << e << std::endl; });
+}
 
 int main() {
     auto x = std::minmax({1, 2, 3, 4, 5, 6});
@@ -224,4 +231,7 @@ int main() {
     // Define a metric with tags
     define_metric(metric2, tag1, tag2);
 
+    OUT(1, 2, 3, 4, 5, 6);
+    
+    
 }
