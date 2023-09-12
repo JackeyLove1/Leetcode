@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div class="md:flex">
+        <div class="md:flex-shrink-0">
+            <img class="h-48 w-full object-cover md:h-full md:w-48" src="img/1.jpg" alt="Man looking at item at a store">
+        </div>
+        <div class="p-8">
+            <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Case study</div>
+            <a href="#" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">Finding customers for your new business</a>
+            <p class="mt-2 text-gray-500">Getting a new business off the ground is a lot of hard work. Here are five ideas you can use to find your first customers.</p>
+        </div>
+    </div>
+</div>
+<button class=" flex bg-red-300 hover:bg-red-700">
+    Hover Me
+</button>
+<button class="bg-green-500 active:bg-green-700">
+    Click me
+</button>
+<div class="flex mt-3 ">
+    <button class="disabled:opacity-50 bg-green-500">
+        Submit
+    </button>
+    <button class="disabled:opacity-50 bg-green-500 " disabled>
+        Submit
+    </button>
+</div>
+</body>
+
+<script lang="ts">
+</script>
+</html>
